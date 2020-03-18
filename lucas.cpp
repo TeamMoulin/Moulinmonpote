@@ -77,16 +77,43 @@ void suprPion(int tab[24], int* tour)
 	suprPion(tab,tour);
 }
 
-bool checkMoulin(int tab[24])
+bool checkMoulin(int tab[24], int* tour, int* derMove)
 {
+	// vérifie les position 0 8 16
+	if *derMove mod 8 == 0
+	{
+		return tab[derMove+1] == tour && tabl[derMove+7] == tour;
+	}
+	// vérifie les position 1 9 17
+	if (*derMove mod 8 == 1)
+	{
+		return tab[derMove-1] == tour && tab[derMove+6] == tour ;
+	}
+	// vérifie les position 7 15 23
+	if (*derMove mod 8 == 7)
+	{
+		return tab[derMove-7] == tour && tab[derMove-1] == tour ;
+	}
+	//tous les impair sauf 1 9 17
+	if (*derMove mod 2 == 1 && *derMove mod 8 != 1)
+	{
+		return tab[derMove-1] == tour && tab[derMove-2] == tour ;
+	}
+	//tous les impair sauf 7 15 23
+	if (*derMove mod 2 == 1 && *derMove mod 8 != 7)
+	{
+		return tab[derMove+1] == tour && tab[derMove+2] == tour ;
+	}
+	
+
 
 }
 
-void phase1 (int tab[24], int* tour,int* derMouve)
+void phase1 (int tab[24], int* tour,int* derMove)
 {
 	for (int i = 1; i < 18; ++i)
 	{
-		placePion(tab, tour, derMouve);
+		placePion(tab, tour, derMove);
 		affPlateau(tab);
 
 
@@ -98,10 +125,10 @@ int main()
 	int tableau[24]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	// 1 pour j1, 2 pour j2
 	int turnP = 1;
-	int derMouve;
+	int derMove;
 
 	affPlateau(tableau);
-	phase1(tableau,&turnP,&derMouve);
+	phase1(tableau,&turnP,&derMove);
 	return 0;
 
 
