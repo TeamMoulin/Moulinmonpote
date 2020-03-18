@@ -65,15 +65,44 @@ void placePion(int tab[24], int* tour)
 	}
 	else { cout << "La case choisie n'est pas disponible"<<endl; placePion(tab, tour); }
 }
+
+void supprPion(int tab[24], int* tour)
+{
+	int a = demandeVal();
+	if ((tab[a] != 0) && (tab[a] != *tour))
+	{
+		tab[a] = 0;
+	}
+	else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour); }
+}
+
+bool check_moulin(int tab[24], int* tour, int* dermove)
+{
+	//Pairs
+	if (*dermove % 8 == 0) { return((tab[*dermove + 1]) == *tour) && (tab[*dermove + 7] == *tour); }//pour 0,8,16 (vertical)
+	if (*dermove % 2 == 0 && (*dermove % 8 == 0)) { return((tab[*dermove + 1]) == *tour) && (tab[*dermove - 1] == *tour); }//pour les autres pairs(horizontaux)
+	//Impairs
+	if (*dermove % 8 == 1) { return((tab[*dermove - 1]) == *tour) && (tab[*dermove + 6] == *tour); }//pour 1,9 et 17
+	if (*dermove % 8 == 7) { return((tab[*dermove - 7]) == *tour) && (tab[*dermove - 6] == *tour); }//pour 7,15 et 23
+	if (*dermove % 2 == 1 && *dermove % 8 != 1) { return((tab[*dermove - 1]) == *tour) && (tab[*dermove - 2] == *tour); }//impairs sauf 1,9 et 17
+	if (*dermove % 2 == 1 && *dermove % 8 != 7) { return((tab[*dermove + 1]) == *tour) && (tab[*dermove + 2] == *tour); }//impairs sauf 7,15 et 23
+}
+
+void phase1(int tab[24],int* tour) {
+	for (int i = 0; i < 18; i++)
+	{
+		placePion(tab, tour);
+		affPlateau(tab);
+	}
+}
+
 int main()
 {
 	int tableau[24] = { 0 };
 	// 1 si c est le tour de p1 2 si c est le tour de p2 
 	int turnP = 1;
+	int dermove;
 	affPlateau(tableau);
-	for (int i = 0; i < 3; i++) {
-		placePion(tableau, &turnP);
-		affPlateau(tableau);
-	}
+	phase1(tableau, &turnP);
 	return 0;
 }
