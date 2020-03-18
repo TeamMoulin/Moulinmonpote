@@ -54,16 +54,16 @@ int demandeVal()
 }
 
 // positionEntre = position entré par le joueur
-void placePion(int tab[24], int* tour)
+void placePion(int tab[24], int* tour, int* a)
 {
-	int a=demandeVal();
-	if (tab[a]== 0)
+	*a=demandeVal();
+	if (tab[*a]== 0)
 	{
-		tab[a] = *tour;
+		tab[*a] = *tour;
 		chgt_tour(tour);
 	}
 	else
-	placePion(tab,tour);
+	placePion(tab,tour,a);
 }
 
 void suprPion(int tab[24], int* tour)
@@ -74,16 +74,19 @@ void suprPion(int tab[24], int* tour)
 		tab[a] = 0;
 	}
 	else
-	placePion(tab,tour);
+	suprPion(tab,tour);
 }
 
+bool checkMoulin(int tab[24])
+{
 
+}
 
-void phase1 (int tab[24], int* tour)
+void phase1 (int tab[24], int* tour,int* derMouve)
 {
 	for (int i = 1; i < 18; ++i)
 	{
-		placePion(tab, tour);
+		placePion(tab, tour, derMouve);
 		affPlateau(tab);
 
 
@@ -95,9 +98,10 @@ int main()
 	int tableau[24]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	// 1 pour j1, 2 pour j2
 	int turnP = 1;
+	int derMouve;
 
 	affPlateau(tableau);
-	phase1(tableau,&turnP);
+	phase1(tableau,&turnP,&derMouve);
 	return 0;
 
 
