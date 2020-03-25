@@ -39,7 +39,6 @@ void affPlateau(int v[24])
 int demandeVal()
 {
 	int position;
-	cout<<"Entrez la position entre 0 et 23 ou vous voulez placer votre pion : ";
 	cin>>position;
 	if(position>23||position<0)
 	{
@@ -56,12 +55,11 @@ void chgt_tour(int* tour) {
 
 int placePion(int tab[24], int* tour)
 {
+	cout <<"Joueur "<<*tour<< ",entrez la position entre 0 et 23 ou vous voulez placer votre pion : ";
 	int dm = demandeVal();
 	if (tab[dm] == 0)
 	{
 		tab[dm] = *tour;
-		//chgt_tour(tour);
-
 	}
 	else { cout << "La case choisie n'est pas disponible"<<endl; placePion(tab, tour); }
 	return dm;
@@ -69,12 +67,16 @@ int placePion(int tab[24], int* tour)
 
 void supprPion(int tab[24], int* tour)
 {
-	int a = demandeVal();
-	if ((tab[a] != 0) && (tab[a] != *tour))
+	cout <<"Joueur "<<*tour<<",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
+	int dm = demandeVal();
 	{
-		tab[a] = 0;
+		if ((tab[dm] != 0) && (tab[dm] != *tour))
+		{
+			if (check_moulin(tab, tour, &dm)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
+			else { tab[dm] = 0; }
+		}
+		else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour); }
 	}
-	else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour); }
 }
 
 bool check_moulin(int tab[24], int* tour, int* dm)//dm: dernier mouvement
@@ -109,7 +111,7 @@ if (*dm % 2 == 1)
 				moulin=(tab[*dm - 1]) == *tour && (tab[*dm - 2] == *tour); if (moulin) { return moulin; }
 			}//pour les autres valeurs (indices précédents), si vrai on retourne le résultat immédiatement
 		if (*dm % 8 == 7) { moulin=(tab[*dm - 7]) == *tour && (tab[*dm - 6] == *tour); }//pour 7,15 et 23 (indices suivants)
-		else{moulin= (tab[*dm - 1]) == *tour && (tab[*dm - 2] == *tour);}//pour les autres valeurs (indices suivants)
+		else{moulin= (tab[*dm + 1]) == *tour && (tab[*dm + 2] == *tour);}//pour les autres valeurs (indices suivants)
 	}
 return moulin;
 }
@@ -119,8 +121,7 @@ void phase1(int tab[24],int* tour,int* dm) {
 	{
 		*dm = placePion(tab, tour);
 		affPlateau(tab);
-		if (check_moulin(tab, tour, dm)) { cout << "oui"<<endl; }
-		else { cout << "non"<<endl; }
+		if (check_moulin(tab, tour, dm)) { supprPion(tab, tour); }
 		chgt_tour(tour);
 	}
 }
@@ -130,8 +131,8 @@ int main()
 	int tableau[24] = { 0 };
 	// 1 si c est le tour de p1 2 si c est le tour de p2 
 	int turnP = 1;
-	int dm;
+	int dermove;
 	affPlateau(tableau);
-	phase1(tableau, &turnP, &dm);
+	phase1(tableau, &turnP, &dermove);
 	return 0;
 }
