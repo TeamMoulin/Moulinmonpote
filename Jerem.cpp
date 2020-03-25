@@ -53,31 +53,19 @@ void chgt_tour(int* tour) {
 	else { *tour = 1; }
 }
 
-int placePion(int tab[24], int* tour)
+int placePion(int tab[24], int* tour,int* dm)
 {
 	cout <<"Joueur "<<*tour<< ",entrez la position entre 0 et 23 ou vous voulez placer votre pion : ";
-	int dm = demandeVal();
-	if (tab[dm] == 0)
+	*dm = demandeVal();
+	if (tab[*dm] == 0)
 	{
-		tab[dm] = *tour;
+		tab[*dm] = *tour;
 	}
-	else { cout << "La case choisie n'est pas disponible"<<endl; placePion(tab, tour); }
-	return dm;
+	else { cout << "La case choisie n'est pas disponible"<<endl; placePion(tab, tour,dm); }
+	return *dm;
 }
 
-void supprPion(int tab[24], int* tour)
-{
-	cout <<"Joueur "<<*tour<<",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
-	int dm = demandeVal();
-	{
-		if ((tab[dm] != 0) && (tab[dm] != *tour))
-		{
-			if (check_moulin(tab, tour, &dm)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
-			else { tab[dm] = 0; }
-		}
-		else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour); }
-	}
-}
+
 
 bool check_moulin(int tab[24], int* tour, int* dm)//dm: dernier mouvement
 {
@@ -116,12 +104,32 @@ if (*dm % 2 == 1)
 return moulin;
 }
 
+void supprPion(int tab[24], int* tour)
+{
+	cout << "Joueur " << *tour << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
+	int valsuppr = demandeVal();
+	{
+		if ((tab[valsuppr] != 0) && (tab[valsuppr] != *tour))
+		{
+			if (*tour == 1) {
+				if (check_moulin(tab, tour + 1, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
+				else { tab[valsuppr] = 0; }
+			}
+			else {
+				if (check_moulin(tab, tour - 1, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
+				else { tab[valsuppr] = 0; }
+			}
+		}
+		else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour); }
+	}
+}
+
 void phase1(int tab[24],int* tour,int* dm) {
 	for (int i = 0; i < 18; i++)
 	{
-		*dm = placePion(tab, tour);
+		*dm = placePion(tab, tour,dm);
 		affPlateau(tab);
-		if (check_moulin(tab, tour, dm)) { supprPion(tab, tour); }
+		if (check_moulin(tab, tour, dm)) { supprPion(tab, tour); affPlateau(tab); }
 		chgt_tour(tour);
 	}
 }
