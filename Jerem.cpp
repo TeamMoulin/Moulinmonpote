@@ -3,38 +3,23 @@ using namespace std;
 
 void affPlateau(int v[24])
 {
-	cout << "Grille exemple:" << endl << endl;
-	cout << "1" << "xxxxxxxxxxxxxxxx" << "2" << "xxxxxxxxxxxxxxxx" << "3" << endl;
-	cout << "x                x                x" << endl;
-	cout << "x    " << "9" << "xxxxxxxxxxx" << "10" << "xxxxxxxxxx" << "11" << "   x" << endl;
-	cout << "x    x           x           x    x" << endl;
-	cout << "x    x    " << "17" << "xxxxx" << "18" << "xxxxx" << "19" << "   x    x" << endl;
-	cout << "x    x    x             x    x    x" << endl;
-	cout << "0" << "xxxx" << "8" << "xxxx" << "16" << "            " << "20" << "xxx" << "12" << "xxx" << "4" << endl;
-	cout << "x    x    x             x    x    x" << endl;
-	cout << "x    x    " << "23" << "xxxxx" << "22" << "xxxxx" << "21" << "   x    x" << endl;
-	cout << "x    x           x           x    x" << endl;
-	cout << "x    " << "15" << "xxxxxxxxxx" << "14" << "xxxxxxxxxx" << "13" << "   x" << endl;
-	cout << "x                x                x" << endl;
-	cout << "7" << "xxxxxxxxxxxxxxxx" << "6" << "xxxxxxxxxxxxxxxx" << "5" << endl << endl;
+	cout << "Grille exemple:" << "                            " << "Grille de jeu:" << endl << endl;
+	cout << "1" << "----------------" << "2" << "----------------" << "3" << "        " << v[1] << "----------------" << v[2] << "----------------" << v[3] << endl;
+	cout << "|                |                |" << "        " << "|                |                |" << endl;
+	cout << "|    " << "9" << "-----------" << "10" << "----------" << "11" << "   |" << "        " << "|    " << v[9] << "-----------" << v[10] << "-----------" << v[11] << "    |" << endl;
+	cout << "|    |           |           |    |" << "        " << "|    |           |           |    |" << endl;
+	cout << "|    |    " << "17" << "-----" << "18" << "-----" << "19" << "   |    |" << "        " << "|    |    " << v[17] << "------" << v[18] << "------" << v[19] << "    |    |" << endl;
+	cout << "|    |    |             |    |    |" << "        " << "|    |    |             |    |    |" << endl;
+	cout << "0" << "----" << "8" << "----" << "16" << "            " << "20" << "---" << "12" << "---" << "4" << "        " << v[0] << "----" << v[8] << "----" << v[16] << "             " << v[20] << "----" << v[12] << "----" << v[4] << endl;
+	cout << "|    |    |             |    |    |" << "        " << "|    |    |             |    |    |" << endl;
+	cout << "|    |    " << "23" << "-----" << "22" << "-----" << "21" << "   |    |" << "        " << "|    |    " << v[23] << "------" << v[22] << "------" << v[21] << "    |    |" << endl;
+	cout << "|    |           |           |    |" << "        " << "|    |           |           |    |" << endl;
+	cout << "|    " << "15" << "----------" << "14" << "----------" << "13" << "   |" << "        " << "|    " << v[15] << "-----------" << v[14] << "-----------" << v[13] << "    |" << endl;
+	cout << "|                |                |" << "        " << "|                |                |" << endl;
+	cout << "7" << "----------------" << "6" << "----------------" << "5" << "        " << v[7] << "----------------" << v[6] << "----------------" << v[5] << endl << endl;
 
-	cout << "Grille de jeu:" << endl << endl;
 
-	cout << v[1] << "xxxxxxxxxxxxxxxx" << v[2] << "xxxxxxxxxxxxxxxx" << v[3] << endl;
-	cout << "x                x                x" << endl;
-	cout << "x    " << v[9] << "xxxxxxxxxxx" << v[10] << "xxxxxxxxxxx" << v[11] << "    x" << endl;
-	cout << "x    x           x           x    x" << endl;
-	cout << "x    x    " << v[17] << "xxxxxx" << v[18] << "xxxxxx" << v[19] << "    x    x" << endl;
-	cout << "x    x    x             x    x    x" << endl;
-	cout << v[0] << "xxxx" << v[8] << "xxxx" << v[16] << "             " << v[20] << "xxxx" << v[12] << "xxxx" << v[4] << endl;
-	cout << "x    x    x             x    x    x" << endl;
-	cout << "x    x    " << v[23] << "xxxxxx" << v[22] << "xxxxxx" << v[21] << "    x    x" << endl;
-	cout << "x    x           x           x    x" << endl;
-	cout << "x    " << v[15] << "xxxxxxxxxxx" << v[14] << "xxxxxxxxxxx" << v[13] << "    x" << endl;
-	cout << "x                x                x" << endl;
-	cout << v[7] << "xxxxxxxxxxxxxxxx" << v[6] << "xxxxxxxxxxxxxxxx" << v[5] << endl;
 }
-
 
 int demandeVal()
 {
@@ -101,28 +86,56 @@ if (*dm % 2 == 1)
 		if (*dm % 8 == 7) { moulin=(tab[*dm - 7]) == *tour && (tab[*dm - 6] == *tour); }//pour 7,15 et 23 (indices suivants)
 		else{moulin= (tab[*dm + 1]) == *tour && (tab[*dm + 2] == *tour);}//pour les autres valeurs (indices suivants)
 	}
+
 return moulin;
+}
+
+bool MoulinPartout(int tab[24], int* autreJ)
+{
+	bool toutMoul = true;
+	int cpt = 0;
+	while (toutMoul && cpt < 24)
+	{
+		if ((tab[cpt] != 0) && (tab[cpt] == *autreJ))
+		{
+			toutMoul = check_moulin(tab, autreJ, &cpt);
+		}
+		cpt++;
+	}
+	return toutMoul;
 }
 
 void supprPion(int tab[24], int* tour)
 {
 	cout << "Joueur " << *tour << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
 	int valsuppr = demandeVal();
+	int autreJ;
 	{
+
 		if ((tab[valsuppr] != 0) && (tab[valsuppr] != *tour))
 		{
 			if (*tour == 1) {
-				if (check_moulin(tab, tour + 1, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
-				else { tab[valsuppr] = 0; }
+				autreJ = 2;
+				if (MoulinPartout(tab, &autreJ)) { cout << "Tous les pions font parti d'un moulin!"<< endl; tab[valsuppr] = 0; }
+				else {
+					if (check_moulin(tab, &autreJ, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
+					else { tab[valsuppr] = 0; }
+				}
 			}
 			else {
-				if (check_moulin(tab, tour - 1, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
-				else { tab[valsuppr] = 0; }
+				autreJ = 1;
+				if (MoulinPartout(tab, &autreJ)) { tab[valsuppr] = 0; }
+				else {
+					if (check_moulin(tab, &autreJ, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
+					else { tab[valsuppr] = 0; }
+				}
 			}
 		}
 		else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour); }
 	}
 }
+
+
 
 void phase1(int tab[24],int* tour,int* dm) {
 	for (int i = 0; i < 18; i++)
