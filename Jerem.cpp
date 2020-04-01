@@ -55,8 +55,6 @@ void affPlateau(int v[24])
 	cout << "|    " << "15" << "----------" << "14" << "----------" << "13" << "   |" << "        " << "|    " << v[15] << "-----------" << v[14] << "-----------" << v[13] << "    |" << endl;
 	cout << "|                |                |" << "        " << "|                |                |" << endl;
 	cout << "7" << "----------------" << "6" << "----------------" << "5" << "        " << v[7] << "----------------" << v[6] << "----------------" << v[5] << endl << endl;
-
-
 }
 
 int demandeVal()
@@ -89,74 +87,119 @@ int placePion(int tab[24], int* tour,int* dm)
 	return *dm;
 }
 
-
-
-bool check_move(int tab[24], int* tour, int spion,int promove)
+bool check_move(int tab[24], int* tour, int spion, int promove)//spion:pion qu'on veut déplacer, promove:case ou l'on veut déplacer le pion
 {
 	bool move = false;
 	//Pairs
 	if (spion % 2 == 0)
 	{
-
 		if (spion % 8 == 0)
 		{
-			move = (spion + 1 == promove) || (spion + 7 == promove); if (move) { return move; }
+			move = (spion + 1 == promove) || (spion + 7 == promove); 
+			if (move) 
+			{
+				return move;
+			}
 		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
 		else
 		{
-			move = (spion + 1 == promove) || (spion - 1 == promove); if (move) { return move; }
+			move = (spion + 1 == promove) || (spion - 1 == promove); 
+			if (move) 
+			{
+				return move;
+			}
 		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
-		if (spion < 8) { move = (spion + 8 == promove); }//Entre les carrés(carré externe)
-		if (spion >= 8 && spion < 16) { move = (spion - 8 == promove) || (spion + 8 == promove); }//Entre les carrés(carré milieu)	
-		if (spion >= 16) { move = (spion - 8 == promove); }//Entre les carrés(carré interne)
-
+		if (spion < 8) 
+		{
+			move = (spion + 8 == promove);
+		}//Entre les carrés(carré externe)
+		if (spion >= 8 && spion < 16) 
+		{
+			move = (spion - 8 == promove) || (spion + 8 == promove);
+		}//Entre les carrés(carré milieu)	
+		if (spion >= 16) 
+		{
+			move = (spion - 8 == promove);
+		}//Entre les carrés(carré interne)
 	}
 	//Impairs
 	if (spion % 2 == 1)
 	{
-		if (spion % 8 == 7) { move = (spion - 7 == promove) || (spion - 1 == promove); }//pour 7,15 et 23 (indices suivants/précédents)
-		else { move = (spion - 1 == promove) || (spion + 1 == promove); }//pour les autres valeurs (indices suivants/précédents)
+		if (spion % 8 == 7) 
+		{
+			move = (spion - 7 == promove) || (spion - 1 == promove);
+		}//pour 7,15 et 23 (indices suivants/précédents)
+		else 
+		{
+			move = (spion - 1 == promove) || (spion + 1 == promove);
+		}//pour les autres valeurs (indices suivants/précédents)
 	}
-
 	return move;
 }
 
-
 bool check_moulin(int tab[24], int* tour, int* dm)//dm: dernier mouvement
 {
-bool moulin=false;
-//Pairs
-if (*dm % 2 == 0)
+	bool moulin=false;
+	//Pairs
+	if (*dm % 2 == 0)
 	{
-	
-	if (*dm % 8 == 0) 
-	{
-		moulin = ((tab[*dm + 1]) == *tour) && (tab[*dm + 7] == *tour); if (moulin) { return moulin; }
-	} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
+		if (*dm % 8 == 0) 
+		{
+			moulin = ((tab[*dm + 1]) == *tour) && (tab[*dm + 7] == *tour); 
+			if (moulin) 
+			{
+				return moulin;
+			}
+		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
 		else 
 		{
-			moulin = (tab[*dm + 1]) == *tour && (tab[*dm - 1] == *tour); if (moulin) { return moulin; }
+			moulin = (tab[*dm + 1]) == *tour && (tab[*dm - 1] == *tour); 
+			if (moulin) 
+			{
+				return moulin;
+			}
 		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
-	if (*dm < 8){ moulin=(tab[*dm + 8]) == *tour && (tab[*dm + 16] == *tour); }//Entre les carrés(carré externe)
-	if (*dm >= 8 && *dm < 16){ moulin=(tab[*dm - 8]) == *tour && (tab[*dm + 8] == *tour); }//Entre les carrés(carré milieu)	
-	if (*dm >= 16){ moulin=(tab[*dm - 8]) == *tour && (tab[*dm - 16] == *tour); }//Entre les carrés(carré interne)
-		
+	if (*dm < 8)
+	{
+		moulin = (tab[*dm + 8]) == *tour && (tab[*dm + 16] == *tour);
+	}//Entre les carrés(carré externe)
+	if (*dm >= 8 && *dm < 16)
+	{
+		moulin = (tab[*dm - 8]) == *tour && (tab[*dm + 8] == *tour);
+	}//Entre les carrés(carré milieu)	
+	if (*dm >= 16)
+	{
+		moulin = (tab[*dm - 8]) == *tour && (tab[*dm - 16] == *tour);
+	}//Entre les carrés(carré interne)
 	}
-//Impairs
-if (*dm % 2 == 1) 
+	//Impairs
+	if (*dm % 2 == 1) 
 	{
 		if (*dm % 8 == 1) 
 		{ 
-			moulin=(tab[*dm - 1]) == *tour && (tab[*dm + 6] == *tour); if (moulin) { return moulin; }
+			moulin=(tab[*dm - 1]) == *tour && (tab[*dm + 6] == *tour); 
+			if (moulin) 
+			{
+				return moulin;
+			}
 		}//pour 1,9 et 17 (indices précédents), si vrai on retourne le résultat immédiatement
 			else
 			{ 
-				moulin=(tab[*dm - 1]) == *tour && (tab[*dm - 2] == *tour); if (moulin) { return moulin; }
+				moulin=(tab[*dm - 1]) == *tour && (tab[*dm - 2] == *tour); 
+				if (moulin) 
+				{
+					return moulin;
+				}
 			}//pour les autres valeurs (indices précédents), si vrai on retourne le résultat immédiatement
-		if (*dm % 8 == 7) { moulin=(tab[*dm - 7]) == *tour && (tab[*dm - 6] == *tour); }//pour 7,15 et 23 (indices suivants)
-		else{moulin= (tab[*dm + 1]) == *tour && (tab[*dm + 2] == *tour);}//pour les autres valeurs (indices suivants)
+		if (*dm % 8 == 7) 
+		{
+			moulin = (tab[*dm - 7]) == *tour && (tab[*dm - 6] == *tour);
+		}//pour 7,15 et 23 (indices suivants)
+		else
+		{
+			moulin = (tab[*dm + 1]) == *tour && (tab[*dm + 2] == *tour);
+		}//pour les autres valeurs (indices suivants)
 	}
-
 return moulin;
 }
 
@@ -179,56 +222,98 @@ bool MoulinPartout(int tab[24], int* autreJ)
 void move_pion(int tab[24], int* tour, int* dm) {
 	int promove;
 	int spion;
+	cout << "Joueur " << *tour << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
 	spion = demandeVal();
-	if (tab[spion] == *tour) {
+	if (tab[spion] == *tour) 
+	{
+		cout << "Joueur " << *tour << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
 		promove = demandeVal();
-		if (check_move(tab, tour, spion, promove)) { *dm = promove; tab[*dm] = *tour; }
+		if (check_move(tab, tour, spion, promove)) 
+		{
+			tab[spion] = 0; *dm = promove; tab[*dm] = *tour;
+		}
+		else 
+		{
+			cout << "Vous ne pouvez pas deplacer le pion ici" << endl; move_pion(tab, tour, dm);
+		}
 	}
-
+	else 
+	{
+		cout << "Cette case est vide ou le pion appartient au joueur adverse"<<endl;
+		move_pion(tab, tour, dm);
+	}
+}
 void supprPion(int tab[24], int* tour,int* pionj1,int* pionj2)
 {
 	cout << "Joueur " << *tour << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
 	int valsuppr = demandeVal();
 	int autreJ;
 	{
-
 		if ((tab[valsuppr] != 0) && (tab[valsuppr] != *tour))
 		{
-			if (*tour == 1) {
+			if (*tour == 1) 
+			{
 				autreJ = 2;
-				if (MoulinPartout(tab, &autreJ)) { cout << "Tous les pions font parti d'un moulin!" << endl; tab[valsuppr] = 0; (*pionj2)--; }
-				else {
-					if (check_moulin(tab, &autreJ, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour, pionj1, pionj2); }
-					else { tab[valsuppr] = 0; (*pionj2)--;}
+				if (MoulinPartout(tab, &autreJ)) 
+				{
+					cout << "Tous les pions font parti d'un moulin!" << endl; tab[valsuppr] = 0; (*pionj2)--;
+				}
+				else 
+				{
+					if (check_moulin(tab, &autreJ, &valsuppr)) 
+					{
+						cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour, pionj1, pionj2);
+					}
+					else 
+					{
+						tab[valsuppr] = 0; (*pionj2)--;
+					}
 				}
 			}
-			else {
+			else 
+			{
 				autreJ = 1;
-				if (MoulinPartout(tab, &autreJ)) { tab[valsuppr] = 0; (*pionj1)--;}
-				else {
-					if (check_moulin(tab, &autreJ, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour, pionj1, pionj2); }
-					else { tab[valsuppr] = 0; (*pionj1)--;}
+				if (MoulinPartout(tab, &autreJ)) 
+				{
+					tab[valsuppr] = 0; (*pionj1)--;
+				}
+				else 
+				{
+					if (check_moulin(tab, &autreJ, &valsuppr)) 
+					{
+						cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour, pionj1, pionj2);
+					}
+					else 
+					{
+						tab[valsuppr] = 0; (*pionj1)--;
+					}
 				}
 			}
 		}
-		else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour, pionj1, pionj2); }
+		else 
+		{
+			cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour, pionj1, pionj2);
+		}
 	}
 }
-
-
 
 void phase1(int tab[24],int* tour,int* dm,int* pionj1,int* pionj2) {
 	for (int i = 0; i < 18; i++)
 	{
 		*dm = placePion(tab, tour,dm);
 		affPlateau(tab);
-		if (check_moulin(tab, tour, dm)) { supprPion(tab,tour,pionj1,pionj2); affPlateau(tab); }
+		if (check_moulin(tab, tour, dm)) 
+		{
+			supprPion(tab, tour, pionj1, pionj2); affPlateau(tab);
+		}
 		chgt_tour(tour);
 	}
 }
+
 void phase2(int tab[24], int* tour, int* dm)
 {
-
+	/*move_pion(tab, tour, dm);
+	affPlateau(tab);*/
 }
 
 int main()
@@ -241,5 +326,6 @@ int main()
 	int dermove;
 	affPlateau(tableau);
 	phase1(tableau, &turnP, &dermove,&pionj1,&pionj2);
+	//phase2(tableau, &turnP, &dermove);
 	return 0;
 }
