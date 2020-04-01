@@ -1,5 +1,43 @@
 #include <iostream>
+#include <windows.h>
 using namespace std;
+
+void ClearScreen()
+{
+	HANDLE                     hStdOut;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	DWORD                      count;
+	DWORD                      cellCount;
+	COORD                      homeCoords = { 0, 0 };
+
+	hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hStdOut == INVALID_HANDLE_VALUE) return;
+
+	/* Get the number of cells in the current buffer */
+	if (!GetConsoleScreenBufferInfo(hStdOut, &csbi)) return;
+	cellCount = csbi.dwSize.X * csbi.dwSize.Y;
+
+	/* Fill the entire buffer with spaces */
+	if (!FillConsoleOutputCharacter(
+		hStdOut,
+		(TCHAR)' ',
+		cellCount,
+		homeCoords,
+		&count
+		)) return;
+
+	/* Fill the entire buffer with the current colors and attributes */
+	if (!FillConsoleOutputAttribute(
+		hStdOut,
+		csbi.wAttributes,
+		cellCount,
+		homeCoords,
+		&count
+		)) return;
+
+	/* Move the cursor home */
+	SetConsoleCursorPosition(hStdOut, homeCoords);
+}
 
 void affPlateau(int v[24])
 {
@@ -45,11 +83,43 @@ int placePion(int tab[24], int* tour,int* dm)
 	if (tab[*dm] == 0)
 	{
 		tab[*dm] = *tour;
+		ClearScreen();
 	}
 	else { cout << "La case choisie n'est pas disponible"<<endl; placePion(tab, tour,dm); }
 	return *dm;
 }
 
+
+
+bool check_move(int tab[24], int* tour, int spion,int promove)
+{
+	bool move = false;
+	//Pairs
+	if (spion % 2 == 0)
+	{
+
+		if (spion % 8 == 0)
+		{
+			move = (spion + 1 == promove) || (spion + 7 == promove); if (move) { return move; }
+		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
+		else
+		{
+			move = (spion + 1 == promove) || (spion - 1 == promove); if (move) { return move; }
+		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
+		if (spion < 8) { move = (spion + 8 == promove); }//Entre les carrés(carré externe)
+		if (spion >= 8 && spion < 16) { move = (spion - 8 == promove) || (spion + 8 == promove); }//Entre les carrés(carré milieu)	
+		if (spion >= 16) { move = (spion - 8 == promove); }//Entre les carrés(carré interne)
+
+	}
+	//Impairs
+	if (spion % 2 == 1)
+	{
+		if (spion % 8 == 7) { move = (spion - 7 == promove) || (spion - 1 == promove); }//pour 7,15 et 23 (indices suivants/précédents)
+		else { move = (spion - 1 == promove) || (spion + 1 == promove); }//pour les autres valeurs (indices suivants/précédents)
+	}
+
+	return move;
+}
 
 
 bool check_moulin(int tab[24], int* tour, int* dm)//dm: dernier mouvement
@@ -90,6 +160,7 @@ if (*dm % 2 == 1)
 return moulin;
 }
 
+
 bool MoulinPartout(int tab[24], int* autreJ)
 {
 	bool toutMoul = true;
@@ -105,7 +176,16 @@ bool MoulinPartout(int tab[24], int* autreJ)
 	return toutMoul;
 }
 
-void supprPion(int tab[24], int* tour)
+void move_pion(int tab[24], int* tour, int* dm) {
+	int promove;
+	int spion;
+	spion = demandeVal();
+	if (tab[spion] == *tour) {
+		promove = demandeVal();
+		if (check_move(tab, tour, spion, promove)) { *dm = promove; tab[*dm] = *tour; }
+	}
+
+void supprPion(int tab[24], int* tour,int* pionj1,int* pionj2)
 {
 	cout << "Joueur " << *tour << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
 	int valsuppr = demandeVal();
@@ -116,44 +196,50 @@ void supprPion(int tab[24], int* tour)
 		{
 			if (*tour == 1) {
 				autreJ = 2;
-				if (MoulinPartout(tab, &autreJ)) { cout << "Tous les pions font parti d'un moulin!"<< endl; tab[valsuppr] = 0; }
+				if (MoulinPartout(tab, &autreJ)) { cout << "Tous les pions font parti d'un moulin!" << endl; tab[valsuppr] = 0; (*pionj2)--; }
 				else {
-					if (check_moulin(tab, &autreJ, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
-					else { tab[valsuppr] = 0; }
+					if (check_moulin(tab, &autreJ, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour, pionj1, pionj2); }
+					else { tab[valsuppr] = 0; (*pionj2)--;}
 				}
 			}
 			else {
 				autreJ = 1;
-				if (MoulinPartout(tab, &autreJ)) { tab[valsuppr] = 0; }
+				if (MoulinPartout(tab, &autreJ)) { tab[valsuppr] = 0; (*pionj1)--;}
 				else {
-					if (check_moulin(tab, &autreJ, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour); }
-					else { tab[valsuppr] = 0; }
+					if (check_moulin(tab, &autreJ, &valsuppr)) { cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, tour, pionj1, pionj2); }
+					else { tab[valsuppr] = 0; (*pionj1)--;}
 				}
 			}
 		}
-		else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour); }
+		else { cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour, pionj1, pionj2); }
 	}
 }
 
 
 
-void phase1(int tab[24],int* tour,int* dm) {
+void phase1(int tab[24],int* tour,int* dm,int* pionj1,int* pionj2) {
 	for (int i = 0; i < 18; i++)
 	{
 		*dm = placePion(tab, tour,dm);
 		affPlateau(tab);
-		if (check_moulin(tab, tour, dm)) { supprPion(tab, tour); affPlateau(tab); }
+		if (check_moulin(tab, tour, dm)) { supprPion(tab,tour,pionj1,pionj2); affPlateau(tab); }
 		chgt_tour(tour);
 	}
+}
+void phase2(int tab[24], int* tour, int* dm)
+{
+
 }
 
 int main()
 {
 	int tableau[24] = { 0 };
 	// 1 si c est le tour de p1 2 si c est le tour de p2 
+	int pionj1 = 9;
+	int	pionj2 = 9;
 	int turnP = 1;
 	int dermove;
 	affPlateau(tableau);
-	phase1(tableau, &turnP, &dermove);
+	phase1(tableau, &turnP, &dermove,&pionj1,&pionj2);
 	return 0;
 }
