@@ -137,6 +137,71 @@ bool check_move(int tab[24], int* tour, int spion, int promove)//spion:pion qu'o
 	return move;
 }
 
+bool check_BlockPartout(int tab[24], int* tour, int spion)//spion:pion qu'on veut déplacer, promove:case ou l'on veut déplacer le pion
+{
+	bool move = false;
+	//Pairs
+	if (spion % 2 == 0)
+	{
+		if (spion % 8 == 0)
+		{
+			move = (tab[spion + 1] == 0) || (tab[spion + 7] == 0);
+			if (move)
+			{
+				return move;
+			}
+		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
+		else
+		{
+			move = (tab[spion + 1] == 0) || (tab[spion - 1] == 0);
+			if (move)
+			{
+				return move;
+			}
+		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
+		if (spion < 8)
+		{
+			move = (tab[spion + 8] == 0);
+		}//Entre les carrés(carré externe)
+		if (spion >= 8 && spion < 16)
+		{
+			move = (tab[spion - 8] == 0) || (tab[spion + 8] == 0);
+		}//Entre les carrés(carré milieu)	
+		if (spion >= 16)
+		{
+			move = (tab[spion - 8] == 0);
+		}//Entre les carrés(carré interne)
+	}
+	//Impairs
+	if (spion % 2 == 1)
+	{
+		if (spion % 8 == 7)
+		{
+			move = (tab[spion - 7] == 0) || (tab[spion - 1] == 0);
+		}//pour 7,15 et 23 (indices suivants/précédents)
+		else
+		{
+			move = (tab[spion - 1] == 0) || (tab[spion + 1] == 0);
+		}//pour les autres valeurs (indices suivants/précédents)
+	}
+	return move;
+}
+
+bool BlockPartout(int tab[24], int* tour)
+{
+	bool toutBlock = true;
+	int spion = 0;
+	while (toutBlock && spion < 24)
+	{
+		if ((tab[spion] != 0) && (tab[spion] == *tour))
+		{
+			toutBlock = !(check_BlockPartout(tab, tour, spion ));
+		}
+		spion++;
+	}
+	return toutBlock;
+}
+
 bool check_moulin(int tab[24], int* tour, int* dm)//dm: dernier mouvement
 {
 	bool moulin=false;
@@ -203,7 +268,6 @@ bool check_moulin(int tab[24], int* tour, int* dm)//dm: dernier mouvement
 return moulin;
 }
 
-
 bool MoulinPartout(int tab[24], int* autreJ)
 {
 	bool toutMoul = true;
@@ -228,13 +292,23 @@ void move_pion(int tab[24], int* tour, int* dm) {
 	{
 		cout << "Joueur " << *tour << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
 		promove = demandeVal();
-		if (check_move(tab, tour, spion, promove)) 
+		if (tab[promove] == 0)
 		{
-			tab[spion] = 0; *dm = promove; tab[*dm] = *tour;
+			if (check_move(tab, tour, spion, promove))
+			{
+				tab[spion] = 0;
+				*dm = promove;
+				tab[*dm] = *tour;
+				ClearScreen();
+			}
+			else
+			{
+				cout << "Vous ne pouvez pas deplacer le pion ici" << endl; move_pion(tab, tour, dm);
+			}
 		}
 		else 
 		{
-			cout << "Vous ne pouvez pas deplacer le pion ici" << endl; move_pion(tab, tour, dm);
+			cout << "Cette case est deja occupee par un pion" << endl; move_pion(tab, tour, dm);
 		}
 	}
 	else 
@@ -256,7 +330,10 @@ void supprPion(int tab[24], int* tour,int* pionj1,int* pionj2)
 				autreJ = 2;
 				if (MoulinPartout(tab, &autreJ)) 
 				{
-					cout << "Tous les pions font parti d'un moulin!" << endl; tab[valsuppr] = 0; (*pionj2)--;
+					cout << "Tous les pions font parti d'un moulin!" << endl; 
+					tab[valsuppr] = 0; 
+					(*pionj2)--;
+					ClearScreen();
 				}
 				else 
 				{
@@ -266,7 +343,8 @@ void supprPion(int tab[24], int* tour,int* pionj1,int* pionj2)
 					}
 					else 
 					{
-						tab[valsuppr] = 0; (*pionj2)--;
+						tab[valsuppr] = 0; 
+						(*pionj2)--;
 					}
 				}
 			}
@@ -310,10 +388,25 @@ void phase1(int tab[24],int* tour,int* dm,int* pionj1,int* pionj2) {
 	}
 }
 
-void phase2(int tab[24], int* tour, int* dm)
+void phase2(int tab[24], int* tour, int* dm, int* pionj1, int* pionj2)
 {
-	/*move_pion(tab, tour, dm);
-	affPlateau(tab);*/
+	if (BlockPartout(tab, tour))
+	{
+		cout << "Vous avez perdu joueur " << *tour << endl;
+	}
+	else
+	{
+		while (*pionj1 > 3 && *pionj2 > 3)
+		{
+			move_pion(tab, tour, dm);
+			affPlateau(tab);
+			if (check_moulin(tab, tour, dm))
+			{
+				supprPion(tab, tour, pionj1, pionj2); affPlateau(tab);
+			}
+			chgt_tour(tour);
+		}
+	}
 }
 
 int main()
@@ -326,6 +419,6 @@ int main()
 	int dermove;
 	affPlateau(tableau);
 	phase1(tableau, &turnP, &dermove,&pionj1,&pionj2);
-	//phase2(tableau, &turnP, &dermove);
+	phase2(tableau, &turnP, &dermove, &pionj1, &pionj2);
 	return 0;
 }
