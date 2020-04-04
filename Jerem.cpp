@@ -137,7 +137,6 @@ bool check_move(int tab[24], int* tour, int spion, int promove)//spion:pion qu'o
 	return move;
 }
 
-
 bool check_BlockPartout(int tab[24], int* tour, int spion)//spion:pion qu'on veut déplacer, promove:case ou l'on veut déplacer le pion
 {
 	bool move = false;
@@ -195,10 +194,11 @@ bool BlockPartout(int tab[24], int* tour)
 	int spion = 0;
 	while (toutBlock && spion < 24)
 	{
-		if ((tab[spion] != 0) && (tab[spion] == *tour))
+		if ( tab[spion] == *tour)
 		{
 			toutBlock = !(check_BlockPartout(tab, tour, spion ));
 		}
+		cout << "spion: " << spion << endl;
 		spion++;
 	}
 	return toutBlock;
@@ -327,6 +327,7 @@ void move_pion(int tab[24], int* tour, int* dm) {
 		cout << "Ce pion est bloque" << endl; move_pion(tab, tour, dm);
 	}
 }
+
 void supprPion(int tab[24], int* tour,int* pionj1,int* pionj2)
 {
 	cout << "Joueur " << *tour << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
@@ -405,13 +406,13 @@ void phase1(int tab[24],int* tour,int* dm,int* pionj1,int* pionj2) {
 
 void phase2(int tab[24], int* tour, int* dm, int* pionj1, int* pionj2)
 {
-	if (BlockPartout(tab, tour))
+	while (*pionj1 > 3 || *pionj2 > 3)
 	{
-		cout << "Vous avez perdu joueur " << *tour << endl;
-	}
-	else
-	{
-		while (*pionj1 > 3 && *pionj2 > 3)
+		if (BlockPartout(tab, tour))
+		{
+			cout << "Vous avez perdu joueur " << *tour << endl;
+		}
+		else
 		{
 			move_pion(tab, tour, dm);
 			affPlateau(tab);
