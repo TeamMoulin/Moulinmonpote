@@ -204,7 +204,7 @@ void supprPion(int tab[24], int* tour, int* pionJ1, int* pionJ2)
 				{
 					tab[valsuppr] = 0;
 				}
-				(*pionJ2) --;
+				(*pionJ2)--;
 			}
 			if (*tour == 2)
 			{
@@ -223,7 +223,7 @@ void supprPion(int tab[24], int* tour, int* pionJ1, int* pionJ2)
 				{
 					tab[valsuppr] = 0;
 				}
-				(*pionJ1) --;
+				(*pionJ1)--;
 			}
 		}
 		else
@@ -238,121 +238,111 @@ void supprPion(int tab[24], int* tour, int* pionJ1, int* pionJ2)
 bool checkMove(int tab[24], int* tour, int proMove, int sPion)
 {
 	bool move = false;
-	// impairs
-	if (sPion % 2 == 1)
+	//Pairs
+	if (sPion % 2 == 0)
 	{
-		// 7 15 23
-		if (sPion % 8 == 7)
+		if (sPion % 8 == 0)
 		{
-			move = (sPion - 7 == proMove || sPion - 1 == proMove);
-		}
+			move = (sPion + 1 == proMove) || (sPion + 7 == proMove);
+			if (move)
+			{
+				return move;
+			}
+		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
 		else
 		{
-			move = (sPion + 1 == proMove || sPion - 1 == proMove);
-		}
-	}
-
-	// pairs
-	else if (sPion % 2 == 0)
-	{
-		if (sPion % 2 == 0)
+			move = (sPion + 1 == proMove) || (sPion - 1 == proMove);
+			if (move)
+			{
+				return move;
+			}
+		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
+		if (sPion < 8)
 		{
-
-			if (sPion % 8 == 0)
-			{
-				move = (sPion + 1 == proMove) || (sPion + 7 == proMove);
-			} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
-			else
-
-			{
-				move = (sPion + 1 == proMove) || (sPion - 1 == proMove);
-			}
-			//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
-
-			if (sPion < 8)
-			{
-				move = (sPion + 8 == proMove);
-			}
-			//Entre les carrés(carré externe)
-
-			if (sPion >= 8 && sPion < 16)
-			{
-				move = (sPion - 8 == proMove) || (sPion + 8 == proMove);
-			}
-			//Entre les carrés(carré milieu)
-
-			if (sPion >= 16)
-			{
-				move = (sPion - 8 == proMove);
-			}
-			//Entre les carrés(carré interne)
-
-		}
-		return move;
+			move = (sPion + 8 == proMove);
+		}//Entre les carrés(carré externe)
+		if (sPion >= 8 && sPion < 16)
+		{
+			move = (sPion - 8 == proMove) || (sPion + 8 == proMove);
+		}//Entre les carrés(carré milieu)	
+		if (sPion >= 16)
+		{
+			move = (sPion - 8 == proMove);
+		}//Entre les carrés(carré interne)
 	}
+	//Impairs
+	if (sPion % 2 == 1)
+	{
+		if (sPion % 8 == 7)
+		{
+			move = (sPion - 7 == proMove) || (sPion - 1 == proMove);
+		}//pour 7,15 et 23 (indices suivants/précédents)
+		else
+		{
+			move = (sPion - 1 == proMove) || (sPion + 1 == proMove);
+		}//pour les autres valeurs (indices suivants/précédents)
+	}
+	return move;
 }
 
-bool checkBlocPartout (int tab[24], int* tour, int sPion)
+bool checkBlocPartout(int tab[24], int* tour, int sPion)
 {
+	// vérifie si un pion est boqué
+	//revoie vrai si une case st libre
 	bool move = false;
-	// impairs
-	if (sPion % 2 == 1)
+	//Pairs
+	if (sPion % 2 == 0)
 	{
-		// 7 15 23
-		if (sPion % 8 == 7)
+		if (sPion % 8 == 0)
 		{
-			move = (tab[sPion - 7] == 0 || tab[sPion - 1] == 0);
-		}
+			move = (tab[sPion + 1] == 0) || (tab[sPion + 7] == 0);
+			if (move)
+			{
+				return move;
+			}
+		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
 		else
 		{
-			move = (tab[sPion + 1] == 0 || tab[sPion - 1] == 0);
-		}
-	}
-
-	// pairs
-	else if (sPion % 2 == 0)
-	{
-		if (sPion % 2 == 0)
+			move = (tab[sPion + 1] == 0) || (tab[sPion - 1] == 0);
+			if (move)
+			{
+				return move;
+			}
+		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
+		if (sPion < 8)
 		{
-
-			if (sPion % 8 == 0)
-			{
-				move = (tab[sPion + 1] == 0) || (tab[sPion + 7] == 0);
-			} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
-			else
-
-			{
-				move = (tab[sPion + 1] == 0) || (tab[sPion - 1] == 0);
-			}
-			//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
-
-			if (sPion < 8)
-			{
-				move = (tab[sPion + 8] == 0);
-			}
-			//Entre les carrés(carré externe)
-
-			if (sPion >= 8 && sPion < 16)
-			{
-				move = (tab[sPion - 8] == 0) || (tab[sPion + 8] == 0);
-			}
-			//Entre les carrés(carré milieu)
-
-			if (sPion >= 16)
-			{
-				move = (tab[sPion - 8] == 0);
-			}
-			//Entre les carrés(carré interne)
-
-		}
-		return move;
+			move = (tab[sPion + 8] == 0);
+		}//Entre les carrés(carré externe)
+		if (sPion >= 8 && sPion < 16)
+		{
+			move = (tab[sPion - 8] == 0) || (tab[sPion + 8] == 0);
+		}//Entre les carrés(carré milieu)	
+		if (sPion >= 16)
+		{
+			move = (tab[sPion - 8] == 0);
+		}//Entre les carrés(carré interne)
 	}
+	//Impairs
+	if (sPion % 2 == 1)
+	{
+		if (sPion % 8 == 7)
+		{
+			move = (tab[sPion - 7] == 0) || (tab[sPion - 1] == 0);
+		}//pour 7,15 et 23 (indices suivants/précédents)
+		else
+		{
+			move = (tab[sPion - 1] == 0) || (tab[sPion + 1] == 0);
+		}//pour les autres valeurs (indices suivants/précédents)
+	}
+	return move;
 }
 
-bool blocPartout (int tab[24], int* tour)
+bool blocPartout(int tab[24], int* tour)
 {
+	// vérifie si tout les pions sont bloquées
+	//renvoie vrai si le joueur ne peu pas bouger 
 	{
-		bool condition = false;
+		bool condition = true;
 		int cpt = 0;
 		while (condition && cpt < 24)
 		{
@@ -370,28 +360,47 @@ void movePion(int tab[24], int* tour, int* dm)
 {
 	int proMove;
 	int sPion;
+	cout << "J" << *tour << " selectionne du pion a bouger" << endl;
 	sPion = demandeVal();
-	if (tab[sPion] == *tour)
+	if (!checkBlocPartout(tab, tour, sPion))
 	{
-		proMove = demandeVal();
-		if (checkMove(tab, tour, proMove, sPion))
-		{
-			*dm = proMove;
-			tab[*dm] = *tour;
-		}
-		else
-		{
-			cout << "ce mouvement est impossible, choisit une autre valeur ;)" << endl;
-			movePion(tab, tour, dm);
-
-		}
+		cout << "ce pion est bloqué, prends en un autre ;)" << endl;
+		movePion(tab, tour, dm);
 
 	}
+	else 
+	{
+		if (tab[sPion] == *tour)
+		{
+			cout << "selection de la case ou le bouger" << endl;
+			proMove = demandeVal();
+			if (tab[proMove] == 0)
+			{
+				if (checkMove(tab, tour, proMove, sPion))
+				{
+					*dm = proMove;
+					tab[*dm] = *tour;
+					tab[sPion] = 0;
+				}
+				else
+				{
+					cout << "ce mouvement est impossible, choisit une autre valeur ;)" << endl;
+					movePion(tab, tour, dm);
+
+				}
+			}
+			else
+			{
+				cout << "Cette case est deja occupee par un pion" << endl; 
+				movePion(tab, tour, dm);	
+			}
+		}
+	}
 }
-	
+
 void phase1(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
 {
-	
+
 	for (int i = 0; i < 18; i++)
 	{
 		*dm = placePion(tab, tour);
@@ -404,11 +413,24 @@ void phase1(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
 	}
 }
 
-void phase2(int tab[24], int* tour, int* dm , int* pionJ1, int* pionJ2)
+void phase2(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
 {
 	while (*pionJ1 > 3 || *pionJ2 > 3)
 	{
-
+		if (!blocPartout(tab, tour))
+		{
+			affPlateau(tab);
+			movePion(tab, tour, dm);
+			if (check_moulin(tab, tour, dm))
+			{
+				supprPion(tab, tour, pionJ1, pionJ2);
+			}
+			chgt_tour(tour);
+		}
+		else
+		{
+			cout << "tu as perdu" << endl;
+		}
 	}
 }
 
@@ -422,5 +444,7 @@ int main()
 	int pionJ2 = 9;
 	affPlateau(tableau);
 	phase1(tableau, &turnP, &dermove, &pionJ1, &pionJ2);
+	phase2(tableau, &turnP, &dermove, &pionJ1, &pionJ2);
+
 	return 0;
 }
