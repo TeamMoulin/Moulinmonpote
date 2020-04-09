@@ -39,6 +39,58 @@ void ClearScreen()
 	SetConsoleCursorPosition(hStdOut, homeCoords);
 }
 
+/*
+void coutstr(string a, int nombre)
+{
+	for (int i = 0; i < nombre; i++)
+	{
+		cout << a;
+	}
+}
+
+void coutc(int couleur, int sortie, int fond)
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handle, 16 * couleur + fond);
+	cout << sortie;
+	SetConsoleTextAttribute(handle, 15);
+
+}
+void affichePion(int tableau[24], int position)
+{
+	if (tableau[position] == 1)
+		coutc(1, position, 15);
+	if (tableau[position] == 2)
+	{
+		coutc(4, position, 15);
+	}
+	if (tableau[position] == 0)
+	{
+		coutc(0, position, 14);
+	}
+}
+
+
+void affPlateau(int v[24], int *tour)
+{
+	ClearScreen();
+	cout << endl;
+	coutstr(" ", 16); cout << "           Grille de jeu" << endl;
+	coutstr(" ", 16); affichePion(v, 1); coutstr("-", 16); affichePion(v, 2); coutstr("-", 16); affichePion(v, 3); cout << endl;
+	coutstr(" ", 16); cout << "|                |                |" << endl;
+	coutstr(" ", 16); cout << "|    "; affichePion(v, 9); cout << "-----------"; affichePion(v, 10); cout << "----------"; affichePion(v, 11); cout << "   |" << endl;
+	coutstr(" ", 16); cout << "|    |           |           |    |" << endl;
+	coutstr(" ", 16); cout << "|    |   "; affichePion(v, 17); cout << "------"; affichePion(v, 18); cout << "-----"; affichePion(v, 19); cout << "   |    |" << endl;
+	coutstr(" ", 16); cout << "|    |    |             |    |    |" << endl;
+	coutstr(" ", 16); affichePion(v, 0); cout << "----"; affichePion(v, 8); cout << "---"; affichePion(v, 16); cout << "             "; affichePion(v, 20); cout << "---"; affichePion(v, 12); cout << "---"; affichePion(v, 4); cout << endl;
+	coutstr(" ", 16); cout << "|    |    |             |    |    |" << endl;
+	coutstr(" ", 16); cout << "|    |   "; affichePion(v, 23); cout << "------"; affichePion(v, 22); cout << "-----"; affichePion(v, 21); cout << "   |    |" << endl;
+	coutstr(" ", 16); cout << "|    |           |           |    |" << endl;
+	coutstr(" ", 16); cout << "|   "; affichePion(v, 15); cout << "-----------"; affichePion(v, 14); cout << "----------"; affichePion(v, 13); cout << "   |" << endl;
+	coutstr(" ", 16); cout << "|                |                |" << endl;
+	coutstr(" ", 16); affichePion(v, 7); coutstr("-", 16); affichePion(v, 6); coutstr("-", 16); affichePion(v, 5); cout << endl << endl;
+}
+*/
 void affPlateau(int v[24])
 {
 	cout << "Grille exemple:" << "                            " << "Grille de jeu:" << endl << endl;
@@ -291,9 +343,9 @@ void move_pion(int tab[24], int* tour, int* dm) {
 	int spion;
 	cout << "Joueur " << *tour << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
 	spion = demandeVal();
-	if (check_BlockPartout(tab, tour, spion))
+	if (tab[spion] == *tour)
 	{
-		if (tab[spion] == *tour)
+		if (check_BlockPartout(tab, tour, spion))
 		{
 			cout << "Joueur " << *tour << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
 			promove = demandeVal();
@@ -318,13 +370,14 @@ void move_pion(int tab[24], int* tour, int* dm) {
 		}
 		else
 		{
-			cout << "Cette case est vide ou le pion appartient au joueur adverse" << endl;
+			cout << "Ce pion est bloque" << endl; 
 			move_pion(tab, tour, dm);
 		}
 	}
 	else
 	{
-		cout << "Ce pion est bloque" << endl; move_pion(tab, tour, dm);
+		cout << "Cette case est vide ou le pion appartient au joueur adverse" << endl;
+		move_pion(tab, tour, dm);
 	}
 }
 
@@ -404,25 +457,50 @@ void phase1(int tab[24],int* tour,int* dm,int* pionj1,int* pionj2) {
 	}
 }
 
-void phase2(int tab[24], int* tour, int* dm, int* pionj1, int* pionj2)
+/*
+bool phase2(int tab[24], int* tour, int* dm, int* pionj1, int* pionj2)
 {
-	while (*pionj1 > 3 || *pionj2 > 3)
+	while (!(BlockPartout(tab, tour)))
 	{
-		if (BlockPartout(tab, tour))
+		move_pion(tab, tour, dm);
+		affPlateau(tab);
+		if (check_moulin(tab, tour, dm))
 		{
-			cout << "Vous avez perdu joueur " << *tour << endl;
-		}
-		else
-		{
-			move_pion(tab, tour, dm);
+			supprPion(tab, dm, pionj1,pionj2);
 			affPlateau(tab);
+		}
+		chgt_tour(tour);
+		if (*pionj1<4 || *pionj2<4)
+		{
+			return true;
+		}
+	}
+	cout << "Le joueur " << tour << " a gagne le jeu.";
+	return false;
+}*/
+bool phase2(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
+{
+
+	while (*pionJ1 > 4 || *pionJ2 > 4)
+	{
+		if (!BlockPartout(tab, tour))
+		{
+			affPlateau(tab);
+			move_pion(tab, tour, dm);
 			if (check_moulin(tab, tour, dm))
 			{
-				supprPion(tab, tour, pionj1, pionj2); affPlateau(tab);
+				supprPion(tab, tour, pionJ1, pionJ2);
+				affPlateau(tab);
 			}
 			chgt_tour(tour);
 		}
+		else
+		{
+			cout << "tu as perdu joueur "<<*tour << endl;
+			return false;
+		}
 	}
+	return true;
 }
 
 int main()
