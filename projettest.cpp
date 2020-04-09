@@ -80,7 +80,7 @@ void affichePion(int tableau[24], int position)
 
 void affichePlateau(int v[24], int turnJ[2])
 {
-	ClearScreen();
+//	ClearScreen();
 	cout <<endl;
 	coutstr(" ",16); cout << "           Grille de jeu" <<endl;
 	coutstr(" ",16); affichePion(v,1); coutstr("-",16); affichePion(v,2); coutstr("-",16); affichePion(v,3); cout<<endl;
@@ -348,7 +348,7 @@ bool blockPartout(int tableau[24], int turnJ[2])
 	int pionSelect = 0;
 	while (toutBlock && pionSelect < 24)
 	{
-		if (tableau[pionSelect] == turnJ[1])
+		if (tableau[pionSelect] == turnJ[0])
 		{
 			toutBlock = !(checkMovePion(tableau, pionSelect));
 		}
@@ -369,14 +369,14 @@ void movePion(int tableau[24], int turnJ[2], int* dernierMove)
 	pionSelect = demandeVal();
 	if (!checkMovePion(tableau, pionSelect))
 	{
-		cout<<"ce pion est bloque";
+		cout<<"ce pion est bloque"<<endl;
 		movePion(tableau, turnJ, dernierMove);
 	}
 	if (tableau[pionSelect] == turnJ[0]) 
 	{
 		if (!checkMovePion(tableau, pionSelect))
 		{
-			cout<<"ce pion est bloque";
+			cout<<"ce pion est bloque"<<endl;
 			movePion(tableau, turnJ, dernierMove);
 		}
 		cout << "Joueur " << turnJ[0] << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
@@ -513,7 +513,7 @@ bool phase2(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 			return true;
 		}
 	}
-	cout<<"Le joueur "<<turnJ[0]<<" a gagne le jeu.";
+	cout<<"Le joueur "<<turnJ[1]<<" a gagne le jeu.";
 	return false;
 }
 
@@ -521,7 +521,7 @@ bool phase3(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 {
 	if(phase2(tableau, turnJ, dernierMove, pions))
 	{
-		while(!(pions[0]< 4 && pions[1]< 4))
+		while((pions[0]< 4 ^ pions[1]< 4))
 		{
 			if(pions[turnJ[0]-1] ==3)
 			{
