@@ -39,7 +39,6 @@ void ClearScreen()
 	SetConsoleCursorPosition(hStdOut, homeCoords);
 }
 
-/*
 void coutstr(string a, int nombre)
 {
 	for (int i = 0; i < nombre; i++)
@@ -48,7 +47,7 @@ void coutstr(string a, int nombre)
 	}
 }
 
-void coutc(int couleur, int sortie, int fond)
+void coutc(int couleur, int sortie, int fond) //Affichage couleur
 {
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, 16 * couleur + fond);
@@ -56,6 +55,7 @@ void coutc(int couleur, int sortie, int fond)
 	SetConsoleTextAttribute(handle, 15);
 
 }
+
 void affichePion(int tableau[24], int position)
 {
 	if (tableau[position] == 1)
@@ -70,8 +70,7 @@ void affichePion(int tableau[24], int position)
 	}
 }
 
-
-void affPlateau(int v[24], int *tour)
+void affPlateau(int v[24])
 {
 	ClearScreen();
 	cout << endl;
@@ -89,25 +88,6 @@ void affPlateau(int v[24], int *tour)
 	coutstr(" ", 16); cout << "|   "; affichePion(v, 15); cout << "-----------"; affichePion(v, 14); cout << "----------"; affichePion(v, 13); cout << "   |" << endl;
 	coutstr(" ", 16); cout << "|                |                |" << endl;
 	coutstr(" ", 16); affichePion(v, 7); coutstr("-", 16); affichePion(v, 6); coutstr("-", 16); affichePion(v, 5); cout << endl << endl;
-}
-*/
-void affPlateau(int v[24])
-{
-	ClearScreen();
-	cout << "Grille exemple:" << "                            " << "Grille de jeu:" << endl << endl;
-	cout << "1" << "----------------" << "2" << "----------------" << "3" << "        " << v[1] << "----------------" << v[2] << "----------------" << v[3] << endl;
-	cout << "|                |                |" << "        " << "|                |                |" << endl;
-	cout << "|    " << "9" << "-----------" << "10" << "----------" << "11" << "   |" << "        " << "|    " << v[9] << "-----------" << v[10] << "-----------" << v[11] << "    |" << endl;
-	cout << "|    |           |           |    |" << "        " << "|    |           |           |    |" << endl;
-	cout << "|    |    " << "17" << "-----" << "18" << "-----" << "19" << "   |    |" << "        " << "|    |    " << v[17] << "------" << v[18] << "------" << v[19] << "    |    |" << endl;
-	cout << "|    |    |             |    |    |" << "        " << "|    |    |             |    |    |" << endl;
-	cout << "0" << "----" << "8" << "----" << "16" << "            " << "20" << "---" << "12" << "---" << "4" << "        " << v[0] << "----" << v[8] << "----" << v[16] << "             " << v[20] << "----" << v[12] << "----" << v[4] << endl;
-	cout << "|    |    |             |    |    |" << "        " << "|    |    |             |    |    |" << endl;
-	cout << "|    |    " << "23" << "-----" << "22" << "-----" << "21" << "   |    |" << "        " << "|    |    " << v[23] << "------" << v[22] << "------" << v[21] << "    |    |" << endl;
-	cout << "|    |           |           |    |" << "        " << "|    |           |           |    |" << endl;
-	cout << "|    " << "15" << "----------" << "14" << "----------" << "13" << "   |" << "        " << "|    " << v[15] << "-----------" << v[14] << "-----------" << v[13] << "    |" << endl;
-	cout << "|                |                |" << "        " << "|                |                |" << endl;
-	cout << "7" << "----------------" << "6" << "----------------" << "5" << "        " << v[7] << "----------------" << v[6] << "----------------" << v[5] << endl << endl;
 }
 
 int demandeVal()
@@ -383,7 +363,7 @@ void move_pion(int tab[24], int turn[2], int* dm) {
 	}
 }
 
-void move_pionIII(int tab[24], int turn[2], int* dm)
+void move_pionIII(int tab[24], int turn[2], int* dm)//deplacement d'un pion lorsqu'un joueur n'a plus que 3 pions
 {
 	int promove;
 	int spion;
