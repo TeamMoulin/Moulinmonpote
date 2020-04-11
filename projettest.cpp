@@ -1,6 +1,5 @@
 #include <iostream>
 #include <windows.h>
-#include <conio.h>
 using namespace std;
 
 void ClearScreen()
@@ -145,7 +144,7 @@ int placePion(int tab[24], int turnJ[2],int* dernierMove)
 
 
 
-bool checkMove(int tableau[24], int turnJ[2], int pionSelect, int prochainMove)//pionSelect:pion qu'on veut déplacer, prochainMove:case ou l'on veut déplacer le pion
+bool checkMove(int pionSelect, int prochainMove)//pionSelect:pion qu'on veut déplacer, prochainMove:case ou l'on veut déplacer le pion
 {
 	bool move = false;
 	//Pairs
@@ -378,7 +377,7 @@ void movePion(int tableau[24], int turnJ[2], int* dernierMove)
 		prochainMove = demandeVal();
 		if (tableau[prochainMove] == 0)
 		{
-			if (checkMove(tableau, turnJ, pionSelect, prochainMove))
+			if (checkMove( pionSelect, prochainMove))
 			{
 				tableau[pionSelect] = 0;
 				*dernierMove = prochainMove;
@@ -454,7 +453,8 @@ void supprimePion(int tableau[24],int pions[2], int turnJ[2])
 		{
 			if (checkMoulin(tableau, turnJ, &valSupprime,1)) 
 			{
-				cout << "Ce pion fait parti d'un moulin !" << endl; supprimePion(tableau, pions, turnJ);
+				cout << "Ce pion fait parti d'un moulin !" << endl; 
+				supprimePion(tableau, pions, turnJ);
 			}
 			else 
 			{
@@ -465,7 +465,8 @@ void supprimePion(int tableau[24],int pions[2], int turnJ[2])
 	}
 	else 
 	{
-		cout << "Vous ne pouvez pas supprimer cette case" << endl; supprimePion(tableau, pions, turnJ);
+		cout << "Vous ne pouvez pas supprimer cette case" << endl; 
+		supprimePion(tableau, pions, turnJ);
 	}
 }
 
@@ -492,30 +493,9 @@ void phase1(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 
 
 
+
 bool phase2(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 {
-	while (!(blockPartout(tableau, turnJ)))
-	{
-		movePion(tableau, turnJ, dernierMove);
-		affichePlateau(tableau, turnJ);
-		if (checkMoulin(tableau, turnJ, dernierMove,0))
-		{
-			supprimePion(tableau, pions, turnJ); 
-			affichePlateau(tableau, turnJ);
-		}
-		chngTour(turnJ);
-		if(pions[0]<4 || pions[1]<4)
-		{
-			return true;
-		}
-	}
-	cout<<"Le joueur "<<turnJ[1]<<" a gagne le jeu.";
-	return false;
-}
-
-bool phase3(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
-{
-	if(phase2(tableau, turnJ, dernierMove, pions))
 	{
 		while((pions[0]>3 || pions[1]>3))
 		{
@@ -524,10 +504,15 @@ bool phase3(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 				movePionIII(tableau, turnJ, dernierMove);
 				affichePlateau(tableau, turnJ);
 			}
-			else
+			else if(!(blockPartout(tableau, turnJ)))
 			{
 				movePion(tableau, turnJ, dernierMove);
 				affichePlateau(tableau, turnJ);
+			}
+			else
+			{
+				cout<<"Le joueur "<<turnJ[1]<<" a gagne le jeu.";
+				return true;				
 			}
 			if(checkMoulin(tableau, turnJ, dernierMove,0))
 			{
@@ -570,6 +555,6 @@ int main()
 	int dernierMove;
 	affichePlateau(tableau, turnJ);
 	phase1(tableau, turnJ, &dernierMove, pions);
-	phase3(tableau, turnJ, &dernierMove, pions);
+	phase2(tableau, turnJ, &dernierMove, pions);
 	return 0;
 }
