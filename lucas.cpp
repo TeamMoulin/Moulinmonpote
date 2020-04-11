@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 using namespace std;
+
 void ClearScreen()
 {
 	HANDLE                     hStdOut;
@@ -38,24 +39,55 @@ void ClearScreen()
 	SetConsoleCursorPosition(hStdOut, homeCoords);
 }
 
+void coutstr(string a, int nombre)
+{
+	for (int i = 0; i < nombre; i++)
+	{
+		cout << a;
+	}
+}
+
+void coutc(int couleur, int sortie, int fond)
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handle, 16 * couleur + fond);
+	cout << sortie;
+	SetConsoleTextAttribute(handle, 15);
+
+}
+
+void affichePion(int tableau[24], int position)
+{
+	if (tableau[position] == 1)
+		coutc(1, position, 15);
+	if (tableau[position] == 2)
+	{
+		coutc(4, position, 15);
+	}
+	if (tableau[position] == 0)
+	{
+		coutc(0, position, 14);
+	}
+}
+
 void affPlateau(int v[24])
 {
 	ClearScreen();
-	cout << "Grille exemple:" << "                            " << "Grille de jeu:" << endl << endl;
-	cout << "1" << "----------------" << "2" << "----------------" << "3" << "        " << v[1] << "----------------" << v[2] << "----------------" << v[3] << endl;
-	cout << "|                |                |" << "        " << "|                |                |" << endl;
-	cout << "|    " << "9" << "-----------" << "10" << "----------" << "11" << "   |" << "        " << "|    " << v[9] << "-----------" << v[10] << "-----------" << v[11] << "    |" << endl;
-	cout << "|    |           |           |    |" << "        " << "|    |           |           |    |" << endl;
-	cout << "|    |    " << "17" << "-----" << "18" << "-----" << "19" << "   |    |" << "        " << "|    |    " << v[17] << "------" << v[18] << "------" << v[19] << "    |    |" << endl;
-	cout << "|    |    |             |    |    |" << "        " << "|    |    |             |    |    |" << endl;
-	cout << "0" << "----" << "8" << "----" << "16" << "            " << "20" << "---" << "12" << "---" << "4" << "        " << v[0] << "----" << v[8] << "----" << v[16] << "             " << v[20] << "----" << v[12] << "----" << v[4] << endl;
-	cout << "|    |    |             |    |    |" << "        " << "|    |    |             |    |    |" << endl;
-	cout << "|    |    " << "23" << "-----" << "22" << "-----" << "21" << "   |    |" << "        " << "|    |    " << v[23] << "------" << v[22] << "------" << v[21] << "    |    |" << endl;
-	cout << "|    |           |           |    |" << "        " << "|    |           |           |    |" << endl;
-	cout << "|    " << "15" << "----------" << "14" << "----------" << "13" << "   |" << "        " << "|    " << v[15] << "-----------" << v[14] << "-----------" << v[13] << "    |" << endl;
-	cout << "|                |                |" << "        " << "|                |                |" << endl;
-	cout << "7" << "----------------" << "6" << "----------------" << "5" << "        " << v[7] << "----------------" << v[6] << "----------------" << v[5] << endl << endl;
-
+	cout << endl;
+	coutstr(" ", 16); cout << "           Grille de jeu" << endl;
+	coutstr(" ", 16); affichePion(v, 1); coutstr("-", 16); affichePion(v, 2); coutstr("-", 16); affichePion(v, 3); cout << endl;
+	coutstr(" ", 16); cout << "|                |                |" << endl;
+	coutstr(" ", 16); cout << "|    "; affichePion(v, 9); cout << "-----------"; affichePion(v, 10); cout << "----------"; affichePion(v, 11); cout << "   |" << endl;
+	coutstr(" ", 16); cout << "|    |           |           |    |" << endl;
+	coutstr(" ", 16); cout << "|    |   "; affichePion(v, 17); cout << "------"; affichePion(v, 18); cout << "-----"; affichePion(v, 19); cout << "   |    |" << endl;
+	coutstr(" ", 16); cout << "|    |    |             |    |    |" << endl;
+	coutstr(" ", 16); affichePion(v, 0); cout << "----"; affichePion(v, 8); cout << "---"; affichePion(v, 16); cout << "             "; affichePion(v, 20); cout << "---"; affichePion(v, 12); cout << "---"; affichePion(v, 4); cout << endl;
+	coutstr(" ", 16); cout << "|    |    |             |    |    |" << endl;
+	coutstr(" ", 16); cout << "|    |   "; affichePion(v, 23); cout << "------"; affichePion(v, 22); cout << "-----"; affichePion(v, 21); cout << "   |    |" << endl;
+	coutstr(" ", 16); cout << "|    |           |           |    |" << endl;
+	coutstr(" ", 16); cout << "|   "; affichePion(v, 15); cout << "-----------"; affichePion(v, 14); cout << "----------"; affichePion(v, 13); cout << "   |" << endl;
+	coutstr(" ", 16); cout << "|                |                |" << endl;
+	coutstr(" ", 16); affichePion(v, 7); coutstr("-", 16); affichePion(v, 6); coutstr("-", 16); affichePion(v, 5); cout << endl << endl;
 }
 
 int demandeVal()
@@ -70,176 +102,160 @@ int demandeVal()
 	return(position);
 }
 
-void chgt_tour(int* tour) {
-	if (*tour == 1) 
-	{ 
-		*tour = 2; 
-	}
-	else { *tour = 1; }
+void chngTour(int turn[2])
+{
+	int a = turn[0];
+	turn[0] = turn[1];
+	turn[1] = a;
 }
 
-int placePion(int tab[24], int* tour)
+int placePion(int tab[24], int turn[2], int* dm)
 {
-	cout << "Joueur " << *tour << ",entrez la position entre 0 et 23 ou vous voulez placer votre pion : ";
-	int dm = demandeVal();
-	if (tab[dm] == 0)
+	cout << "Joueur " << turn[0] << ",entrez la position entre 0 et 23 ou vous voulez placer votre pion : ";
+	*dm = demandeVal();
+	if (tab[*dm] == 0)
 	{
-		tab[dm] = *tour;
+		tab[*dm] = turn[0];
 		ClearScreen();
 	}
-	else { cout << "La case choisie n'est pas disponible" << endl; placePion(tab, tour); }
-	return dm;
+	else
+	{
+		cout << "La case choisie n'est pas disponible" << endl;
+		placePion(tab, turn, dm); 
+	}
+	return *dm;
 }
 
-bool check_moulin(int tab[24], int* tour, int* dm)//dm: dernier mouvement
+bool checkMoulin(int tableau[24], int turn[2], int* dernierMove, int Joueur1ou2)//dernierMove: dernier mouvement
 {
 	bool moulin = false;
 	//Pairs
-	if (*dm % 2 == 0)
+	if (*dernierMove % 2 == 0)
 	{
-
-		if (*dm % 8 == 0)
+		if (*dernierMove % 8 == 0)
 		{
-			moulin = ((tab[*dm + 1]) == *tour) && (tab[*dm + 7] == *tour);
+			moulin = ((tableau[*dernierMove + 1]) == turn[Joueur1ou2]) && (tableau[*dernierMove + 7] == turn[Joueur1ou2]);
 			if (moulin)
 			{
 				return moulin;
 			}
-		}
+		} 
 		//Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
+
 		else
 		{
-			moulin = (tab[*dm + 1]) == *tour && (tab[*dm - 1] == *tour);
+			moulin = (tableau[*dernierMove + 1]) == turn[Joueur1ou2] && (tableau[*dernierMove - 1] == turn[Joueur1ou2]);
 			if (moulin)
 			{
 				return moulin;
 			}
 		}
 		//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
-		if (*dm < 8)
+
+		if (*dernierMove < 8)
 		{
-			moulin = (tab[*dm + 8]) == *tour && (tab[*dm + 16] == *tour);
+			moulin = (tableau[*dernierMove + 8]) == turn[Joueur1ou2] && (tableau[*dernierMove + 16] == turn[Joueur1ou2]);
 		}
 		//Entre les carrés(carré externe)
-		if (*dm >= 8 && *dm < 16)
+
+		if (*dernierMove >= 8 && *dernierMove < 16)
 		{
-			moulin = (tab[*dm - 8]) == *tour && (tab[*dm + 8] == *tour);
+			moulin = (tableau[*dernierMove - 8]) == turn[Joueur1ou2] && (tableau[*dernierMove + 8] == turn[Joueur1ou2]);
 		}
-		//Entre les carrés(carré milieu)	
-		if (*dm >= 16)
+		//Entre les carrés(carré milieu)
+
+		if (*dernierMove >= 16)
 		{
-			moulin = (tab[*dm - 8]) == *tour && (tab[*dm - 16] == *tour);
+			moulin = (tableau[*dernierMove - 8]) == turn[Joueur1ou2] && (tableau[*dernierMove - 16] == turn[Joueur1ou2]);
 		}
 		//Entre les carrés(carré interne)
 
 	}
 	//Impairs
-	if (*dm % 2 == 1)
+	if (*dernierMove % 2 == 1)
 	{
-		if (*dm % 8 == 1)
+		if (*dernierMove % 8 == 1)
 		{
-			moulin = (tab[*dm - 1]) == *tour && (tab[*dm + 6] == *tour);
+			moulin = (tableau[*dernierMove - 1]) == turn[Joueur1ou2] && (tableau[*dernierMove + 6] == turn[Joueur1ou2]);
 			if (moulin)
 			{
 				return moulin;
 			}
 		}
 		//pour 1,9 et 17 (indices précédents), si vrai on retourne le résultat immédiatement
+		
 		else
 		{
-			moulin = (tab[*dm - 1]) == *tour && (tab[*dm - 2] == *tour);
+			moulin = (tableau[*dernierMove - 1]) == turn[Joueur1ou2] && (tableau[*dernierMove - 2] == turn[Joueur1ou2]);
 			if (moulin)
 			{
 				return moulin;
 			}
 		}
 		//pour les autres valeurs (indices précédents), si vrai on retourne le résultat immédiatement
-		if (*dm % 8 == 7)
+		
+		if (*dernierMove % 8 == 7)
 		{
-			moulin = (tab[*dm - 7]) == *tour && (tab[*dm - 6] == *tour);
+			moulin = (tableau[*dernierMove - 7]) == turn[Joueur1ou2] && (tableau[*dernierMove - 6] == turn[Joueur1ou2]);
 		}
 		//pour 7,15 et 23 (indices suivants)
+		
 		else
 		{
-			moulin = (tab[*dm + 1]) == *tour && (tab[*dm + 2] == *tour);
+			moulin = (tableau[*dernierMove + 1]) == turn[Joueur1ou2] && (tableau[*dernierMove + 2] == turn[Joueur1ou2]);
 		}
 		//pour les autres valeurs (indices suivants)
 	}
 	return moulin;
 }
 
-bool MoulinPartout(int tab[24], int* autreJ)
+bool MoulinPartout(int tab[24], int turn[2])
 {
 	bool condition = true;
 	int cpt = 0;
 	while (condition && cpt < 24)
 	{
-		if (tab[cpt] == *autreJ)
+		if (tab[cpt] == turn[1])
 		{
-			condition = check_moulin(tab, autreJ, &cpt);
+			condition = checkMoulin(tab, turn, &cpt, 1); // 1 car on désigne l'autre joueur
 		}
 		cpt++;
 	}
 	return condition;
 }
 
-void supprPion(int tab[24], int* tour, int* pionJ1, int* pionJ2)
+void supprPion(int tab[24],int turn[2], int pions[2])
 {
-	int autreJ;
-	cout << "Joueur " << *tour << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
-	int valsuppr = demandeVal();
+	cout << "Joueur " << turn[0] << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
+	int valSupprime = demandeVal();
+	if (tab[valSupprime] == turn[1])
 	{
-		if ((tab[valsuppr] != 0) && (tab[valsuppr] != *tour))
+
+		if (MoulinPartout(tab, turn))
 		{
-			if (*tour == 1)
-			{
-				autreJ = 2;
-				if (MoulinPartout(tab, &autreJ))
-				{
-					//cout << "suprimez le pion de votre choix" << endl;
-					tab[valsuppr] = 0;
-				}
-				else if (check_moulin(tab, &autreJ, &valsuppr))
-				{
-					cout << "Ce pion fait parti d'un moulin !" << endl;
-					supprPion(tab, tour, pionJ1, pionJ2);
-				}
-				else
-				{
-					tab[valsuppr] = 0;
-				}
-				(*pionJ2)--;
-			}
-			if (*tour == 2)
-			{
-				autreJ = 1;
-				if (MoulinPartout(tab, &autreJ))
-				{
-					//cout << "suprimez le pion de votre choix" << endl;
-					tab[valsuppr] = 0;
-				}
-				else if (check_moulin(tab, &autreJ, &valsuppr))
-				{
-					cout << "Ce pion fait parti d'un moulin !" << endl;
-					supprPion(tab, tour, pionJ1, pionJ2);
-				}
-				else
-				{
-					tab[valsuppr] = 0;
-				}
-				(*pionJ1)--;
-			}
+			tab[valSupprime] = 0;
+			(pions[turn[1] - 1])--;
 		}
 		else
 		{
-			cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, tour, pionJ1, pionJ2);
+			if (checkMoulin(tab, turn, &valSupprime, 1))
+			{
+				cout << "Ce pion fait parti d'un moulin !" << endl; supprPion(tab, turn, pions);
+			}
+			else
+			{
+				tab[valSupprime] = 0;
+				(pions[turn[1] - 1])--;
+			}
 		}
-		affPlateau(tab);
 	}
-
+	else
+	{
+		cout << "Vous ne pouvez pas supprimer cette case" << endl; supprPion(tab, turn, pions);
+	}
 }
 
-bool checkMove(int tab[24], int* tour, int proMove, int sPion)
+bool checkMove(int proMove, int sPion)
 {
 	bool move = false;
 	//Pairs
@@ -289,7 +305,7 @@ bool checkMove(int tab[24], int* tour, int proMove, int sPion)
 	return move;
 }
 
-bool checkBlocPartout(int tab[24], int* tour, int sPion)
+bool checkBlocPartout(int tab[24], int sPion)
 {
 	// vérifie si un pion est boqué
 	//revoie vrai si une case st libre
@@ -352,7 +368,7 @@ bool blocPartout(int tab[24], int* tour)
 		{
 			if (tab[cpt] == *tour)
 			{
-				condition = !checkBlocPartout(tab, tour, cpt);
+				condition = !checkBlocPartout(tab, cpt);
 			}
 			cpt++;
 		}
@@ -360,69 +376,69 @@ bool blocPartout(int tab[24], int* tour)
 	}
 }
 
-void movePion(int tab[24], int* tour, int* dm) {
+void movePion(int tab[24], int turn[2], int* dm) {
 	int promove;
 	int spion;
-	cout << "Joueur " << *tour << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
+	cout << "Joueur " << turn[0] << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
 	spion = demandeVal();
-	if (tab[spion] == *tour)
+	if (tab[spion] == turn[0])
 	{
-		if (checkBlocPartout(tab, tour, spion))
+		if (checkBlocPartout(tab, spion))
 		{
-			cout << "Joueur " << *tour << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
+			cout << "Joueur " << turn[0] << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
 			promove = demandeVal();
 			if (tab[promove] == 0)
 			{
-				if (checkMove(tab, tour, spion, promove))
+				if (checkMove(spion, promove))
 				{
 					tab[spion] = 0;
 					*dm = promove;
-					tab[*dm] = *tour;
+					tab[*dm] = turn[0];
 				}
 				else
 				{
-					cout << "Vous ne pouvez pas deplacer le pion ici" << endl; movePion(tab, tour, dm);
+					cout << "Vous ne pouvez pas deplacer le pion ici" << endl; movePion(tab, turn, dm);
 				}
 			}
 			else
 			{
-				cout << "Cette case est deja occupee par un pion" << endl; movePion(tab, tour, dm);
+				cout << "Cette case est deja occupee par un pion" << endl; movePion(tab, turn, dm);
 			}
 		}
 		else
 		{
 			cout << "Ce pion est bloque" << endl;
-			movePion(tab, tour, dm);
+			movePion(tab, turn, dm);
 		}
 	}
 	else
 	{
 		cout << "Cette case est vide ou le pion appartient au joueur adverse" << endl;
-		movePion(tab, tour, dm);
+		movePion(tab, turn, dm);
 	}
 }
 
-void movePion3(int tab[24], int* tour, int* dm)
+void movePion3(int tab[24], int turn[2], int* dm)
 {
 	int promove;
 	int spion;
-	cout << "Joueur " << *tour << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
+	cout << "Joueur " << turn[0] << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
 	spion = demandeVal();
-	if (tab[spion] == *tour)
+	if (tab[spion] == turn[0])
 	{
-		cout << "Joueur " << *tour << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
+		cout << "Joueur " << turn[0] << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
 		promove = demandeVal();
 		if (tab[promove] == 0)
 		{
 			tab[spion] = 0;
 			*dm = promove;
-			tab[*dm] = *tour;
+			tab[*dm] = turn[0];
 		}
 		else
 		
 		{
 			cout << "Cette case est deja occupee par un pion" << endl; 
-			movePion(tab, tour, dm);
+			movePion3(tab, turn, dm);
 		}
 
 	}
@@ -430,61 +446,90 @@ void movePion3(int tab[24], int* tour, int* dm)
 	else
 	{
 		cout << "Cette case est vide ou le pion appartient au joueur adverse" << endl;
-		movePion(tab, tour, dm);
+		movePion3(tab, turn, dm);
 	}
 }
 
-void phase1(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
+void phase1(int tab[24], int turn[2], int* dm, int pions[2])
 {
 
 	for (int i = 0; i < 18; i++)
 	{
-		*dm = placePion(tab, tour);
+		*dm = placePion(tab, turn, dm);
 		affPlateau(tab);
-		if (check_moulin(tab, tour, dm))
+		if (checkMoulin(tab, turn, dm, 0))
 		{
-			supprPion(tab, tour, pionJ1, pionJ2);
+			supprPion(tab, turn, pions);
 		}
-		chgt_tour(tour);
+		chngTour(turn);
 	}
 }
 
-bool phase2(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
+void phase2(int tab[24], int turn[2], int* dm, int pions[2])
 {
-
-	while ((*pionJ1 > 4) && (*pionJ2 > 4))
+	int toursRestants = 20;
+	while ((pions[0] > 3 || pions[1] > 3))
 	{
-		if (!blocPartout(tab, tour))
+		if (pions[turn[0] - 1] == 3)
 		{
+			movePion3(tab, turn, dm);
 			affPlateau(tab);
-			movePion(tab, tour, dm);
-			if (check_moulin(tab, tour, dm))
-			{
-				supprPion(tab, tour, pionJ1, pionJ2);
-			}
-			chgt_tour(tour);
+		}
+		else if (!(blocPartout(tab, turn)))
+		{
+			movePion(tab, turn, dm);
+			affPlateau(tab);
 		}
 		else
 		{
-			cout << "joueur " << tour << "a perdu" << endl;
-			return false;
+			cout << "Le joueur " << turn[1] << " a gagne le jeu." <<endl;
+			return;
 		}
+		if (checkMoulin(tab, turn, dm, 0))
+		{
+			supprPion(tab, turn, pions);
+			affPlateau(tab);
+		}
+		if (pions[turn[1] - 1] < 3)
+		{
+			cout << "Le joueur " << turn[0] << " a gagne le jeu." << endl;
+			return;
+		}
+		chngTour(turn);
 	}
-	
-}
+	cout << "Il vous reste 20 coups" << endl;
+	for (int i = 0; i < 40; i++)
+	{
+		chngTour(turn);
+		if (i % 2 == 0)
+		{
+			toursRestants--;
+		}
+		cout << "il vous restes " << toursRestants << "tours" << endl;
+		movePion3(tab, turn, dm);
+		affPlateau(tab);
+		if (checkMoulin(tab, turn, dm, 0))
+		{
+			cout << "Le joueur " << turn[0] << " a gagne le jeu." << endl;
+			return;
+		}
 
+	}
+	cout << "Match nul" << endl;
+	return;
+
+}
 
 int main()
 {
 	int tableau[24] = { 0 };
 	// 1 si c est le tour de p1 2 si c est le tour de p2 
-	int turnP = 1;
+	int turn[2] = { 1,2 };
 	int dermove;
-	int pionJ1 = 9;
-	int pionJ2 = 9;
+	int pions[2] = { 9,9 };
 	affPlateau(tableau);
-	phase1(tableau, &turnP, &dermove, &pionJ1, &pionJ2);
-	phase2(tableau, &turnP, &dermove, &pionJ1, &pionJ2);
+	phase1(tableau, turn, &dermove, pions);
+	phase2(tableau, turn, &dermove, pions);
 
 	return 0;
 }
