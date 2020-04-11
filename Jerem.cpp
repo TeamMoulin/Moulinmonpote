@@ -421,7 +421,7 @@ void supprPion(int tab[24], int turn[2],int pions[2])
 		if (MoulinPartout(tab, turn))//Cas ou tous les pions adverses font parti d'un moulin
 		{
 			tab[valsuppr] = 0;
-			(pions[1])--;
+			(pions[turn[1]-1])--;
 		}
 		else
 		{
@@ -432,7 +432,7 @@ void supprPion(int tab[24], int turn[2],int pions[2])
 			else
 			{
 				tab[valsuppr] = 0;
-				(pions[1])--;
+				(pions[turn[1]-1])--;
 			}
 		}
 	}
@@ -455,84 +455,55 @@ void phase1(int tab[24],int* tour,int* dm,int pions[2]) {
 	}
 }
 
-void phase2(int tab[24],int turn[2],int* dm, int pions[2])
+void phase2(int tab[24], int turn[2], int* dm, int pions[2])
 {
+	while ((pions[0] > 3 || pions[1] > 3))
 	{
-		while((pions[0]>3 || pions[1]>3))
+		if (pions[turn[0] - 1] == 3)
 		{
-			cout << "pions J1: " << pions[0] << endl << "pions J2: " << pions[1] << endl;
-			if(pions[turn[0]-1] ==3)
+			move_pionIII(tab, turn, dm);
+			affPlateau(tab);
+		}
+		else
+		{
+			if (!(BlockPartout(tab, turn)))
 			{
-				move_pionIII(tab, turn, dm);
+				move_pion(tab, turn, dm);
 				affPlateau(tab);
 			}
 			else
 			{
-				if (!(BlockPartout(tab, turn)))
-				{
-					move_pion(tab, turn, dm);
-					affPlateau(tab);
-				}
-				else
-				{
-					cout << "Le joueur " << turn[1] << " a gagne le jeu."<<endl;
-					return;
-				}
+				cout << "Le joueur " << turn[1] << " a gagne le jeu. (pions tous bloques) " << endl;
+				return;
 			}
-			if(check_moulin(tab, turn, dm,0))
-			{
-				supprPion(tab, turn, pions);
-				affPlateau(tab);
-			}
-			if(pions[turn[1]-1] < 3)
-			{
-				cout<<"Le joueur "<<turn[0]<<" a gagne le jeu."<<endl;
-				return ;
-			}
-			chgt_tour(turn);
 		}
-		cout<<"Il vous reste 20 coups"<<endl;
-		for(int i = 0; i < 40; i++)
+		if (check_moulin(tab, turn, dm, 0))
 		{
-			move_pionIII(tab, turn, dm);
+			supprPion(tab, turn, pions);
 			affPlateau(tab);
-			if(check_moulin(tab, turn, dm,0))
-			{
-				cout<<"Le joueur "<<turn[0]<<" a gagne le jeu."<<endl;
-				return ;
-			}
-			chgt_tour(turn);
 		}
-		cout<<"Match nul"<<endl;
-		return ;
+		if (pions[turn[1] - 1] < 3)
+		{
+			cout << "Le joueur " << turn[0] << " a gagne le jeu. " << endl;
+			return;
+		}
+		chgt_tour(turn);
 	}
-}
-
-/*
-bool phase2(int tab[24], int* tour, int* dm, int pions[2])
-{
-	bool cond = true;
-	while (cond)//(*pionJ1 > 4) || (*pionJ2 > 4))
+	for (int i = 0; i < 40; i++)
 	{
-		if (!BlockPartout(tab, tour))
+		cout << "Il reste "<<40-i<<" coups avant le match nul." << endl;
+		move_pionIII(tab, turn, dm);
+		affPlateau(tab);
+		if (check_moulin(tab, turn, dm, 0))
 		{
-			affPlateau(tab);
-			move_pion(tab, tour, dm);
-			if (check_moulin(tab, tour, dm,0))
-			{
-				supprPion(tab, tour, pions);
-				affPlateau(tab);
-			}
-			chgt_tour(tour);
+			cout << "Le joueur " << turn[0] << " a gagne le jeu." << endl;
+			return;
 		}
-		else
-		{
-			cout << "tu as perdu joueur "<<*tour << endl;
-			return false;
-		}
+		chgt_tour(turn);
 	}
-	return true;
-}*/
+	cout << "Match nul" << endl;
+	return;
+}
 
 int main()
 {
