@@ -77,7 +77,7 @@ void affichePion(int tableau[24], int position)
 
 
 
-void affichePlateau(int v[24], int turnJ[2])
+void affichePlateau(int v[24])
 {
 	ClearScreen();
 	cout <<endl;
@@ -479,11 +479,11 @@ void phase1(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 	for (int i = 0; i < 18; i++)
 	{
 		*dernierMove = placePion(tableau, turnJ, dernierMove);
-		affichePlateau(tableau, turnJ);
+		affichePlateau(tableau);
 		if (checkMoulin(tableau, turnJ, dernierMove,0)) 
 		{
 			supprimePion(tableau, pions, turnJ); 
-			affichePlateau(tableau, turnJ);
+			affichePlateau(tableau);
 		}
 		chngTour(turnJ);
 	}
@@ -502,12 +502,12 @@ bool phase2(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 			if(pions[turnJ[0]-1] ==3)
 			{
 				movePionIII(tableau, turnJ, dernierMove);
-				affichePlateau(tableau, turnJ);
+				affichePlateau(tableau);
 			}
 			else if(!(blockPartout(tableau, turnJ)))
 			{
 				movePion(tableau, turnJ, dernierMove);
-				affichePlateau(tableau, turnJ);
+				affichePlateau(tableau);
 			}
 			else
 			{
@@ -517,7 +517,7 @@ bool phase2(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 			if(checkMoulin(tableau, turnJ, dernierMove,0))
 			{
 				supprimePion(tableau, pions, turnJ); 
-				affichePlateau(tableau, turnJ);
+				affichePlateau(tableau);
 			}
 			if(pions[turnJ[1]-1] < 3)
 			{
@@ -530,7 +530,7 @@ bool phase2(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 		for(int i = 0; i < 40; i++)
 		{
 			movePionIII(tableau, turnJ, dernierMove);
-			affichePlateau(tableau, turnJ);
+			affichePlateau(tableau);
 			if(checkMoulin(tableau, turnJ, dernierMove,0))
 			{
 				cout<<"Le joueur "<<turnJ[0]<<" a gagne le jeu.";
@@ -553,7 +553,7 @@ int main()
 	int pions[2] = {9, 9};
 	int turnJ[2] = {1, 2};
 	int dernierMove;
-	affichePlateau(tableau, turnJ);
+	affichePlateau(tableau);
 	phase1(tableau, turnJ, &dernierMove, pions);
 	phase2(tableau, turnJ, &dernierMove, pions);
 	return 0;
