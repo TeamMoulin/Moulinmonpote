@@ -70,7 +70,10 @@ int demandeVal()
 }
 
 void chgt_tour(int* tour) {
-	if (*tour == 1) { *tour = 2; }
+	if (*tour == 1) 
+	{ 
+		*tour = 2; 
+	}
 	else { *tour = 1; }
 }
 
@@ -356,45 +359,46 @@ bool blocPartout(int tab[24], int* tour)
 	}
 }
 
-void movePion(int tab[24], int* tour, int* dm)
-{
-	int proMove;
-	int sPion;
-	cout << "J" << *tour << " selectionne du pion a bouger" << endl;
-	sPion = demandeVal();
-	if (!checkBlocPartout(tab, tour, sPion))
+void movePion(int tab[24], int* tour, int* dm) {
+	int promove;
+	int spion;
+	cout << "Joueur " << *tour << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
+	spion = demandeVal();
+	if (tab[spion] == *tour)
 	{
-		cout << "ce pion est bloqué, prends en un autre ;)" << endl;
-		movePion(tab, tour, dm);
-
-	}
-	else 
-	{
-		if (tab[sPion] == *tour)
+		if (checkBlocPartout(tab, tour, spion))
 		{
-			cout << "selection de la case ou le bouger" << endl;
-			proMove = demandeVal();
-			if (tab[proMove] == 0)
+			cout << "Joueur " << *tour << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
+			promove = demandeVal();
+			if (tab[promove] == 0)
 			{
-				if (checkMove(tab, tour, proMove, sPion))
+				if (checkMove(tab, tour, spion, promove))
 				{
-					*dm = proMove;
+					tab[spion] = 0;
+					*dm = promove;
 					tab[*dm] = *tour;
-					tab[sPion] = 0;
+					ClearScreen();
 				}
 				else
 				{
-					cout << "ce mouvement est impossible, choisit une autre valeur ;)" << endl;
-					movePion(tab, tour, dm);
-
+					cout << "Vous ne pouvez pas deplacer le pion ici" << endl; movePion(tab, tour, dm);
 				}
 			}
 			else
 			{
-				cout << "Cette case est deja occupee par un pion" << endl; 
-				movePion(tab, tour, dm);	
+				cout << "Cette case est deja occupee par un pion" << endl; movePion(tab, tour, dm);
 			}
 		}
+		else
+		{
+			cout << "Ce pion est bloque" << endl;
+			movePion(tab, tour, dm);
+		}
+	}
+	else
+	{
+		cout << "Cette case est vide ou le pion appartient au joueur adverse" << endl;
+		movePion(tab, tour, dm);
 	}
 }
 
@@ -413,9 +417,10 @@ void phase1(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
 	}
 }
 
-void phase2(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
+bool phase2(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
 {
-	while (*pionJ1 > 3 || *pionJ2 > 3)
+
+	while ((*pionJ1 > 4) && (*pionJ2 > 4))
 	{
 		if (!blocPartout(tab, tour))
 		{
@@ -429,10 +434,13 @@ void phase2(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
 		}
 		else
 		{
-			cout << "tu as perdu" << endl;
+			cout << "joueur " << tour << "a perdu" << endl;
+			return false;
 		}
 	}
+	return true;
 }
+
 
 int main()
 {
