@@ -80,7 +80,7 @@ void affichePion(int tableau[24], int position)
 
 void affichePlateau(int v[24], int turnJ[2])
 {
-//	ClearScreen();
+	ClearScreen();
 	cout <<endl;
 	coutstr(" ",16); cout << "           Grille de jeu" <<endl;
 	coutstr(" ",16); affichePion(v,1); coutstr("-",16); affichePion(v,2); coutstr("-",16); affichePion(v,3); cout<<endl;
@@ -221,19 +221,19 @@ bool checkMoulin(int tableau[24], int turnJ[2], int* dernierMove, int a)//dernie
 				return moulin;
 			}
 		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
-	if (*dernierMove < 8)
-	{
-		moulin = (tableau[*dernierMove + 8]) == turnJ[a] && (tableau[*dernierMove + 16] == turnJ[a]);
-	}//Entre les carrés(carré externe)
-	if (*dernierMove >= 8 && *dernierMove < 16)
-	{
-		moulin = (tableau[*dernierMove - 8]) == turnJ[a] && (tableau[*dernierMove + 8] == turnJ[a]);
-	}//Entre les carrés(carré milieu)	
-	if (*dernierMove >= 16)
-	{
-		moulin = (tableau[*dernierMove - 8]) == turnJ[a] && (tableau[*dernierMove - 16] == turnJ[a]);
-	}//Entre les carrés(carré interne)
-	}
+		if (*dernierMove < 8)
+		{
+			moulin = (tableau[*dernierMove + 8]) == turnJ[a] && (tableau[*dernierMove + 16] == turnJ[a]);
+		}//Entre les carrés(carré externe)
+		if (*dernierMove >= 8 && *dernierMove < 16)
+		{
+			moulin = (tableau[*dernierMove - 8]) == turnJ[a] && (tableau[*dernierMove + 8] == turnJ[a]);
+		}//Entre les carrés(carré milieu)	
+		if (*dernierMove >= 16)
+		{
+			moulin = (tableau[*dernierMove - 8]) == turnJ[a] && (tableau[*dernierMove - 16] == turnJ[a]);
+		}//Entre les carrés(carré interne)
+		}
 	//Impairs
 	if (*dernierMove % 2 == 1) 
 	{
@@ -245,14 +245,14 @@ bool checkMoulin(int tableau[24], int turnJ[2], int* dernierMove, int a)//dernie
 				return moulin;
 			}
 		}//pour 1,9 et 17 (indices précédents), si vrai on retourne le résultat immédiatement
-			else
-			{ 
-				moulin=(tableau[*dernierMove - 1]) == turnJ[a] && (tableau[*dernierMove - 2] == turnJ[a]); 
-				if (moulin) 
-				{
-					return moulin;
-				}
-			}//pour les autres valeurs (indices précédents), si vrai on retourne le résultat immédiatement
+		else
+		{ 
+			moulin=(tableau[*dernierMove - 1]) == turnJ[a] && (tableau[*dernierMove - 2] == turnJ[a]); 
+			if (moulin) 
+			{
+				return moulin;
+			}
+		}//pour les autres valeurs (indices précédents), si vrai on retourne le résultat immédiatement
 		if (*dernierMove % 8 == 7) 
 		{
 			moulin = (tableau[*dernierMove - 7]) == turnJ[a] && (tableau[*dernierMove - 6] == turnJ[a]);
@@ -372,13 +372,8 @@ void movePion(int tableau[24], int turnJ[2], int* dernierMove)
 		cout<<"ce pion est bloque"<<endl;
 		movePion(tableau, turnJ, dernierMove);
 	}
-	if (tableau[pionSelect] == turnJ[0]) 
+	else if (tableau[pionSelect] == turnJ[0]) 
 	{
-		if (!checkMovePion(tableau, pionSelect))
-		{
-			cout<<"ce pion est bloque"<<endl;
-			movePion(tableau, turnJ, dernierMove);
-		}
 		cout << "Joueur " << turnJ[0] << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
 		prochainMove = demandeVal();
 		if (tableau[prochainMove] == 0)
@@ -421,21 +416,22 @@ void movePionIII(int tableau[24], int turnJ[2], int* dernierMove)
 		cout<<"Aucun de vos pions se trouve dans cette position, Choisissez une autre position"<<endl;
 		movePionIII(tableau, turnJ, dernierMove);
 	}
-	cout << "Joueur " << turnJ[0] << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion"<<endl<< "ou entrez vorte position actuelle pour selectionner un autre pion ";
-	prochainMove = demandeVal();
-	if (tableau[prochainMove] == 0)
+	else
 	{
-		tableau[pionSelect] = 0;
-		*dernierMove = prochainMove;
-		tableau[prochainMove] = turnJ[0];
+		cout << "Joueur " << turnJ[0] << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion"<<endl<< "ou entrez vorte position actuelle pour selectionner un autre pion ";
+		prochainMove = demandeVal();
+		if (tableau[prochainMove] == 0)
+		{
+			tableau[pionSelect] = 0;
+			*dernierMove = prochainMove;
+			tableau[prochainMove] = turnJ[0];
+		}
+		else 
+		{
+			cout << "Cette case n''est pas vide, Veuillez choisir a nouveau."<<endl;
+			movePionIII(tableau, turnJ, dernierMove);
+		}
 	}
-	else 
-	{
-		cout << "Cette case n''est pas vide, Veuillez choisir a nouveau."<<endl;
-		movePionIII(tableau, turnJ, dernierMove);
-	}
-	
-	
 }
 
 
@@ -521,7 +517,7 @@ bool phase3(int tableau[24],int turnJ[2],int* dernierMove, int pions[2])
 {
 	if(phase2(tableau, turnJ, dernierMove, pions))
 	{
-		while((pions[0]< 4 ^ pions[1]< 4))
+		while((pions[0]>3 || pions[1]>3))
 		{
 			if(pions[turnJ[0]-1] ==3)
 			{
