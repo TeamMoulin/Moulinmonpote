@@ -40,6 +40,7 @@ void ClearScreen()
 
 void affPlateau(int v[24])
 {
+	ClearScreen();
 	cout << "Grille exemple:" << "                            " << "Grille de jeu:" << endl << endl;
 	cout << "1" << "----------------" << "2" << "----------------" << "3" << "        " << v[1] << "----------------" << v[2] << "----------------" << v[3] << endl;
 	cout << "|                |                |" << "        " << "|                |                |" << endl;
@@ -377,7 +378,6 @@ void movePion(int tab[24], int* tour, int* dm) {
 					tab[spion] = 0;
 					*dm = promove;
 					tab[*dm] = *tour;
-					ClearScreen();
 				}
 				else
 				{
@@ -395,6 +395,38 @@ void movePion(int tab[24], int* tour, int* dm) {
 			movePion(tab, tour, dm);
 		}
 	}
+	else
+	{
+		cout << "Cette case est vide ou le pion appartient au joueur adverse" << endl;
+		movePion(tab, tour, dm);
+	}
+}
+
+void movePion3(int tab[24], int* tour, int* dm)
+{
+	int promove;
+	int spion;
+	cout << "Joueur " << *tour << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
+	spion = demandeVal();
+	if (tab[spion] == *tour)
+	{
+		cout << "Joueur " << *tour << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
+		promove = demandeVal();
+		if (tab[promove] == 0)
+		{
+			tab[spion] = 0;
+			*dm = promove;
+			tab[*dm] = *tour;
+		}
+		else
+		
+		{
+			cout << "Cette case est deja occupee par un pion" << endl; 
+			movePion(tab, tour, dm);
+		}
+
+	}
+	
 	else
 	{
 		cout << "Cette case est vide ou le pion appartient au joueur adverse" << endl;
@@ -438,7 +470,7 @@ bool phase2(int tab[24], int* tour, int* dm, int* pionJ1, int* pionJ2)
 			return false;
 		}
 	}
-	return true;
+	
 }
 
 
