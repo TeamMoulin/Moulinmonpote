@@ -111,7 +111,7 @@ void chgt_tour(int turn[2])//change l'ordre du tableau turn:chgt_tour({1,2})={2,
 
 int placePion(int tab[24], int turn[2],int* dm)//Place un pion sur le tableau
 {
-	cout <<"Joueur "<<turn[0]<< ",entrez la position entre 0 et 23 ou vous voulez placer votre pion : ";
+	cout <<"Joueur "<<turn[0]<< ", entrez la position entre 0 et 23 ou vous voulez placer votre pion : ";
 	*dm = demandeVal();
 	if (tab[*dm] == 0)
 	{
@@ -323,13 +323,13 @@ void move_pion(int tab[24], int turn[2], int* dm) //déplace un pion du joueur a
 {
 	int promove;
 	int spion;
-	cout << "Joueur " << turn[0] << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
+	cout << "Joueur " << turn[0] << ", entrez le pion entre 0 et 23 que vous voulez deplacer : ";
 	spion = demandeVal();
 	if (tab[spion] == turn[0])
 	{
 		if (check_BlockPartout(tab,spion))
 		{
-			cout << "Joueur " << turn[0] << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
+			cout << "Joueur " << turn[0] << ", entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
 			promove = demandeVal();
 			if (tab[promove] == 0)
 			{
@@ -368,11 +368,11 @@ void move_pionIII(int tab[24], int turn[2], int* dm)//deplacement d'un pion lors
 {
 	int promove;
 	int spion;
-	cout << "Joueur " << turn[0] << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
+	cout << "Joueur " << turn[0] << ", entrez le pion entre 0 et 23 que vous voulez deplacer : ";
 	spion = demandeVal();
 	if (tab[spion] == turn[0])
 	{
-		cout << "Joueur " << turn[0] << ",entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
+		cout << "Joueur " << turn[0] << ", entrez la position entre 0 et 23 ou vous voulez deplacer votre pion : ";
 		promove = demandeVal();
 		if (tab[promove] == 0)
 		{
@@ -395,7 +395,7 @@ void move_pionIII(int tab[24], int turn[2], int* dm)//deplacement d'un pion lors
 
 void supprPion(int tab[24], int turn[2],int pions[2])//Supprime un pion
 {
-	cout << "Joueur " << turn[0] << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
+	cout << "Joueur " << turn[0] << ", entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
 	int valsuppr = demandeVal();
 	if (tab[valsuppr] == turn[1])
 	{
@@ -423,17 +423,18 @@ void supprPion(int tab[24], int turn[2],int pions[2])//Supprime un pion
 	}
 }
 
-void phase1(int tab[24],int* tour,int* dm,int pions[2]) //phase 1 s'arrêtant quand les pions des 2 joueurs ont tous étés placés
+void phase1(int tab[24],int turn[2],int* dm,int pions[2]) //phase 1 s'arrêtant quand les pions des 2 joueurs ont tous étés placés
 {
 	for (int i = 0; i < 18; i++)
 	{
-		*dm = placePion(tab, tour,dm);
+		cout << "Joueur " << turn[0] << ", il vous reste " << 9 - (i / 2) << " pion(s) a placer" << endl;
+		*dm = placePion(tab, turn,dm);
 		affPlateau(tab);
-		if (check_moulin(tab, tour, dm,0)) 
+		if (check_moulin(tab, turn, dm,0)) 
 		{
-			supprPion(tab, tour, pions); affPlateau(tab);
+			supprPion(tab, turn, pions); affPlateau(tab);
 		}
-		chgt_tour(tour);
+		chgt_tour(turn);
 	}
 }
 
@@ -473,7 +474,7 @@ void phase2(int tab[24], int turn[2], int* dm, int pions[2])//phase 2 s'arrêtan
 	}
 	for (int i = 0; i < 40; i++)
 	{
-		cout << "Il reste "<<40-i<<" coups avant le match nul." << endl;
+		cout << "Il reste "<<40-i<<" coup(s) avant le match nul." << endl;
 		move_pionIII(tab, turn, dm);
 		affPlateau(tab);
 		if (check_moulin(tab, turn, dm, 0))
@@ -496,5 +497,15 @@ int main()
 	affPlateau(tableau);
 	phase1(tableau, turn, &dermove, pions);
 	phase2(tableau, turn, &dermove, pions);
+	string rejouer = "oui";
+	string choix;
+	cout << "si vous voulez rejouer une partie entrez 'oui' " << endl;
+	cout << "si vous voulez vous arreter entrez 'non' " << endl;
+	cout << "votre choix: ";
+	cin >> choix;
+	if (choix == rejouer)
+	{
+		main();
+	}
 	return 0;
 }
