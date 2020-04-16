@@ -8,6 +8,8 @@ void ClearScreen()
 	system("CLS");//ca efface la console
 }
 
+
+
 void coutstr(string a, int nombre)
 {
 	for(int i=0; i<nombre; i++)
@@ -15,6 +17,9 @@ void coutstr(string a, int nombre)
 		cout<<a;
 	}
 }
+
+
+
 
 void regles()
 {
