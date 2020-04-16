@@ -1,5 +1,7 @@
 #include <iostream>
 #include <windows.h>
+#include <stdlib.h>
+#include <stdio.h>
 using namespace std;
 
 void ClearScreen()
@@ -501,7 +503,7 @@ void phase2(int tab[24], int turn[2], int* dm, int pions[2])
 	for (int i = 0; i < 40; i++)
 	{
 		chngTour(turn);
-		if (i % 2 == 0)
+		if (i % 2 == 0 )
 		{
 			toursRestants--;
 		}
@@ -530,6 +532,14 @@ int main()
 	affPlateau(tableau);
 	phase1(tableau, turn, &dermove, pions);
 	phase2(tableau, turn, &dermove, pions);
-
+	string rejouer = "oui";
+	string choix;
+	cout << "si vous voulez rejouer entrez: oui" << endl;
+	cout << "si vous voulez vous arréter entrez: non" << endl;
+	cin >> choix;
+	if (choix == rejouer)
+	{
+		main();
+	}
 	return 0;
 }
