@@ -2,7 +2,7 @@
 #include <windows.h>
 using namespace std;
 
-void ClearScreen()
+void ClearScreen()//Nettoie le terminal quand appelé
 {
 	HANDLE                     hStdOut;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -39,7 +39,7 @@ void ClearScreen()
 	SetConsoleCursorPosition(hStdOut, homeCoords);
 }
 
-void coutstr(string a, int nombre)
+void coutstr(string a, int nombre)//Affichage d'un caractère le nombre de fois voulu (coutstr(f,3)="fff")
 {
 	for (int i = 0; i < nombre; i++)
 	{
@@ -56,7 +56,7 @@ void coutc(int couleur, int sortie, int fond) //Affichage couleur
 
 }
 
-void affichePion(int tableau[24], int position)
+void affichePion(int tableau[24], int position)//affiche le pion en bleu s'il appartient au joueur 1, en rouge pour le joueur 2, en jaune s'il appartient à personne 
 {
 	if (tableau[position] == 1)
 		coutc(1, position, 15);
@@ -70,7 +70,7 @@ void affichePion(int tableau[24], int position)
 	}
 }
 
-void affPlateau(int v[24])
+void affPlateau(int v[24])//Affichage du plateau de jeu
 {
 	ClearScreen();
 	cout << endl;
@@ -90,7 +90,7 @@ void affPlateau(int v[24])
 	coutstr(" ", 16); affichePion(v, 7); coutstr("-", 16); affichePion(v, 6); coutstr("-", 16); affichePion(v, 5); cout << endl << endl;
 }
 
-int demandeVal()
+int demandeVal()//fonction demandant une valeur à l'utilisateur
 {
 	int position;
 	cin>>position;
@@ -102,14 +102,14 @@ int demandeVal()
 	return(position);
 }
 
-void chgt_tour(int turn[2])
+void chgt_tour(int turn[2])//change l'ordre du tableau turn:chgt_tour({1,2})={2,1}
 {
 	int a = turn[0];
 	turn[0] = turn[1];
 	turn[1] = a;
 }
 
-int placePion(int tab[24], int turn[2],int* dm)
+int placePion(int tab[24], int turn[2],int* dm)//Place un pion sur le tableau
 {
 	cout <<"Joueur "<<turn[0]<< ",entrez la position entre 0 et 23 ou vous voulez placer votre pion : ";
 	*dm = demandeVal();
@@ -120,7 +120,7 @@ int placePion(int tab[24], int turn[2],int* dm)
 	else { cout << "La case choisie n'est pas disponible"<<endl; placePion(tab, turn,dm); }
 	return *dm;
 }
-
+//check_move: vérifie si la case ou le joueur veut déplacer le pion est à côté du pion en question
 bool check_move(int spion, int promove)//spion:pion qu'on veut déplacer, promove:case ou l'on veut déplacer le pion
 {
 	bool move = false;
@@ -170,7 +170,7 @@ bool check_move(int spion, int promove)//spion:pion qu'on veut déplacer, promov
 	}
 	return move;
 }
-
+//vérifie si un pion est bloqué: si libre renvoie vrai,sinon renvoie false, 
 bool check_BlockPartout(int tab[24], int spion)//spion:pion qu'on veut déplacer, promove:case ou l'on veut déplacer le pion
 {
 	bool move = false;
@@ -220,8 +220,8 @@ bool check_BlockPartout(int tab[24], int spion)//spion:pion qu'on veut déplacer
 	}
 	return move;
 }
-//si libre renvoie vrai,sinon si tout est bloque renvoie false, verifie pour un pion
 
+//Vérifie si tous les pions sont bloqués:si oui renvoie vrai, sinon renvoie faux
 bool BlockPartout(int tab[24], int turn[2])
 {
 	bool toutBlock = true;
@@ -236,8 +236,8 @@ bool BlockPartout(int tab[24], int turn[2])
 	}
 	return toutBlock;
 }
-//si tous les pions sont bloques renvoie vrai, sinon renvoie faux
 
+//Regarde si un pion fait parti d'un moulin
 bool check_moulin(int tab[24], int turn[2], int* dm,int a)//dm: dernier mouvement, a: 1 si joueur adverse, 0 si joueur actuel
 {
 	bool moulin=false;
@@ -304,7 +304,7 @@ bool check_moulin(int tab[24], int turn[2], int* dm,int a)//dm: dernier mouvemen
 return moulin;
 }
 
-bool MoulinPartout(int tab[24], int turn[2])
+bool MoulinPartout(int tab[24], int turn[2])//Regarde si tous les pions font parti d'un moulin
 {
 	bool toutMoul = true;
 	int cpt = 0;
@@ -319,7 +319,8 @@ bool MoulinPartout(int tab[24], int turn[2])
 	return toutMoul;
 }
 
-void move_pion(int tab[24], int turn[2], int* dm) {
+void move_pion(int tab[24], int turn[2], int* dm) //déplace un pion du joueur actuel
+{
 	int promove;
 	int spion;
 	cout << "Joueur " << turn[0] << ",entrez le pion entre 0 et 23 que vous voulez deplacer : ";
@@ -392,7 +393,7 @@ void move_pionIII(int tab[24], int turn[2], int* dm)//deplacement d'un pion lors
 	}
 }
 
-void supprPion(int tab[24], int turn[2],int pions[2])
+void supprPion(int tab[24], int turn[2],int pions[2])//Supprime un pion
 {
 	cout << "Joueur " << turn[0] << ",entrez le numero du pion entre 0 et 23 que vous voulez supprimer : ";
 	int valsuppr = demandeVal();
@@ -422,7 +423,8 @@ void supprPion(int tab[24], int turn[2],int pions[2])
 	}
 }
 
-void phase1(int tab[24],int* tour,int* dm,int pions[2]) {
+void phase1(int tab[24],int* tour,int* dm,int pions[2]) //phase 1 s'arrêtant quand les pions des 2 joueurs ont tous étés placés
+{
 	for (int i = 0; i < 18; i++)
 	{
 		*dm = placePion(tab, tour,dm);
@@ -435,7 +437,7 @@ void phase1(int tab[24],int* tour,int* dm,int pions[2]) {
 	}
 }
 
-void phase2(int tab[24], int turn[2], int* dm, int pions[2])
+void phase2(int tab[24], int turn[2], int* dm, int pions[2])//phase 2 s'arrêtant quand un joueur gagne la partie
 {
 	while ((pions[0] > 3 || pions[1] > 3))
 	{
@@ -487,10 +489,10 @@ void phase2(int tab[24], int turn[2], int* dm, int pions[2])
 
 int main()
 {
-	int tableau[24] = { 0 };
-	int pions[2] = { 9,9 }; //nbr de pions des 2 joueurs
-	int turn[2] = { 1,2 };//turn[0]:joueur actuel turn[1]: autre joueur
-	int dermove;
+	int tableau[24] = { 0 }; //tableau de la grille du jeu contenant tous les indices
+	int pions[2] = { 9,9 }; //tableau contenant le nombre de pions des 2 joueurs
+	int turn[2] = { 1,2 }; //turn[0]:joueur actuel turn[1]: autre joueur
+	int dermove; //valeur contenant l'indice du dernier pion joué
 	affPlateau(tableau);
 	phase1(tableau, turn, &dermove, pions);
 	phase2(tableau, turn, &dermove, pions);
