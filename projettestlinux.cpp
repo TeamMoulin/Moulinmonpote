@@ -1,12 +1,6 @@
 #include <iostream>
-#include <windows.h>
-#include <stdlib.h>
 using namespace std;
 
-void ClearScreen()
-{
-	system("CLS");//ca efface la console
-}
 
 void coutstr(string a, int nombre)
 {
@@ -19,25 +13,23 @@ void coutstr(string a, int nombre)
 
 
 
-void coutc(int couleur, int sortie, int fond)
+void coutc(int couleur, int sortie)
 {
-   HANDLE handle= GetStdHandle(STD_OUTPUT_HANDLE);
-   SetConsoleTextAttribute( handle,16*couleur+fond);
-   cout<< sortie;
-   SetConsoleTextAttribute( handle, 15);
+	string lacouleur;
+	lacouleur="\033[1;"+to_string(couleur)+"m";
+	cout << lacouleur;
+    cout<< sortie;
+    cout << "\033[0m";
+
 
 }
-
-
-
-
 void affichePion(int tableau[24], int position)
 {
 	if (tableau[position] == 1)
-		coutc(1,position,15);
+		coutc(44,position);
 	else if (tableau[position] == 2)
 	{
-		coutc(4,position,15);
+		coutc(41,position);
 	}
 	else
 	{
@@ -46,6 +38,10 @@ void affichePion(int tableau[24], int position)
 }
 
 
+void ClearScreen()
+{
+	cout<< "\x1B[2J\x1B[H";
+}
 
 
 
