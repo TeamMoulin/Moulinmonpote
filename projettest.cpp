@@ -16,6 +16,24 @@ void coutstr(string a, int nombre)
 	}
 }
 
+void regles()
+{
+	cout<<"Jeu du moulin - Les regles du jeu"<<endl;
+	cout<<"Le jeu se deroule en trois phases : La pose, le mouvement et le saut."<<endl;
+	cout<<"A tout moment du jeu, celui qui realise un moulin, c'est-a-dire l'alignement" <<endl;
+	cout<<"de trois de ses pions, peut capturer un pion adverse quelconque parmi ceux n'appartenant pas a un moulin."<<endl;
+	cout<<"Phase 1 - La pose"<<endl;
+	cout<<"Tant qu'il en possede encore, chaque joueur place a tour de role un pion sur une intersection libre."<<endl;
+	cout<<"La phase 2 debute apres que les joueurs ont place tous leurs pions." <<endl;
+	cout<<"Phase 2 - Le mouvement"<<endl;
+	cout<<"Lorsqu'il n'a plus de pion a poser, chaque joueur fait glisser l'un de ses pions vers une intersection"<<endl;
+	cout<<"voisine libre en suivant un chemin prevu. La phase 3 debute des que l'un des joueurs est reduit à 3 pions."<<endl;
+	cout<<"Phase 3 - Le pose"<<endl;
+	cout<<"Celui qui ne possede plus que trois pions peut alors se deplacer en sautant ou il veut."<<endl;
+	cout<<"Le jeu s'acheve quand un joueur n'a plus que deux pions ou ne peut plus jouer, il est alors le perdant."<<endl;
+	cout<<"Appuyez sur entree pour commencer";
+	cin.get();
+}
 
 
 
@@ -525,6 +543,7 @@ int main()
 	int pions[2] = {9, 9};
 	int turnJ[2] = {1, 2};
 	int dernierMove;
+	regles();
 	affichePlateau(tableau);
 	phase1(tableau, turnJ, &dernierMove, pions);
 	phase2(tableau, turnJ, &dernierMove, pions);
