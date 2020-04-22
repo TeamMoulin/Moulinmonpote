@@ -32,7 +32,7 @@ void regles()
 	cout<<"    La phase 2 debute apres que les joueurs ont place tous leurs pions." <<endl;
 	cout<<"	Phase 2 - Le mouvement"<<endl;
 	cout<<"    Lorsqu'il n'a plus de pion a poser, chaque joueur fait glisser l'un de ses pions vers une intersection"<<endl;
-	cout<<"    voisine libre en suivant un chemin prevu. La phase 3 debute des que l'un des joueurs est reduit à 3 pions."<<endl;
+	cout<<"    voisine libre en suivant un chemin prevu. La phase 3 debute des que l'un des joueurs est reduit Ã  3 pions."<<endl;
 	cout<<"	Phase 3 - Le pose"<<endl;
 	cout<<"    Celui qui ne possede plus que trois pions peut alors se deplacer en sautant ou il veut."<<endl;
 	cout<<"    Le jeu s'acheve quand un joueur n'a plus que deux pions ou ne peut plus jouer, il est alors le perdant."<<endl;
@@ -141,7 +141,7 @@ int placePion(int tab[24], int turnJ[2],int* dernierMove)
 
 
 
-bool checkMove(int pionSelect, int prochainMove)//pionSelect:pion qu'on veut déplacer, prochainMove:case ou l'on veut déplacer le pion
+bool checkMove(int pionSelect, int prochainMove)//pionSelect:pion qu'on veut dÃ©placer, prochainMove:case ou l'on veut dÃ©placer le pion
 {
 	bool move = false;
 	//Pairs
@@ -154,7 +154,7 @@ bool checkMove(int pionSelect, int prochainMove)//pionSelect:pion qu'on veut dép
 			{
 				return move;
 			}
-		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
+		} //Sur les carrÃ©s(pour 0,8,16), si vrai on retourne le rÃ©sultat immÃ©diatement
 		else
 		{
 			move = (pionSelect + 1 == prochainMove) || (pionSelect - 1 == prochainMove); 
@@ -162,19 +162,19 @@ bool checkMove(int pionSelect, int prochainMove)//pionSelect:pion qu'on veut dép
 			{
 				return move;
 			}
-		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
+		}//Sur les carrÃ©s(sauf 0,8,16 qui posent problÃ¨me), si vrai on retourne le rÃ©sultat immÃ©diatement
 		if (pionSelect < 8) 
 		{
 			move = (pionSelect + 8 == prochainMove);
-		}//Entre les carrés(carré externe)
+		}//Entre les carrÃ©s(carrÃ© externe)
 		if (pionSelect >= 8 && pionSelect < 16) 
 		{
 			move = (pionSelect - 8 == prochainMove) || (pionSelect + 8 == prochainMove);
-		}//Entre les carrés(carré milieu)	
+		}//Entre les carrÃ©s(carrÃ© milieu)	
 		if (pionSelect >= 16) 
 		{
 			move = (pionSelect - 8 == prochainMove);
-		}//Entre les carrés(carré interne)
+		}//Entre les carrÃ©s(carrÃ© interne)
 	}
 	//Impairs
 	if (pionSelect % 2 == 1)
@@ -182,11 +182,11 @@ bool checkMove(int pionSelect, int prochainMove)//pionSelect:pion qu'on veut dép
 		if (pionSelect % 8 == 7) 
 		{
 			move = (pionSelect - 7 == prochainMove) || (pionSelect - 1 == prochainMove);
-		}//pour 7,15 et 23 (indices suivants/précédents)
+		}//pour 7,15 et 23 (indices suivants/prÃ©cÃ©dents)
 		else 
 		{
 			move = (pionSelect - 1 == prochainMove) || (pionSelect + 1 == prochainMove);
-		}//pour les autres valeurs (indices suivants/précédents)
+		}//pour les autres valeurs (indices suivants/prÃ©cÃ©dents)
 	}
 	return move;
 }
@@ -208,7 +208,7 @@ bool checkMoulin(int tableau[24], int turnJ[2], int* dernierMove, int a)//dernie
 			{
 				return moulin;
 			}
-		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
+		} //Sur les carrÃ©s(pour 0,8,16), si vrai on retourne le rÃ©sultat immÃ©diatement
 		else 
 		{
 			moulin = (tableau[*dernierMove + 1]) == turnJ[a] && (tableau[*dernierMove - 1] == turnJ[a]); 
@@ -216,19 +216,19 @@ bool checkMoulin(int tableau[24], int turnJ[2], int* dernierMove, int a)//dernie
 			{
 				return moulin;
 			}
-		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
+		}//Sur les carrÃ©s(sauf 0,8,16 qui posent problÃ¨me), si vrai on retourne le rÃ©sultat immÃ©diatement
 		if (*dernierMove < 8)
 		{
 			moulin = (tableau[*dernierMove + 8]) == turnJ[a] && (tableau[*dernierMove + 16] == turnJ[a]);
-		}//Entre les carrés(carré externe)
+		}//Entre les carrÃ©s(carrÃ© externe)
 		if (*dernierMove >= 8 && *dernierMove < 16)
 		{
 			moulin = (tableau[*dernierMove - 8]) == turnJ[a] && (tableau[*dernierMove + 8] == turnJ[a]);
-		}//Entre les carrés(carré milieu)	
+		}//Entre les carrÃ©s(carrÃ© milieu)	
 		if (*dernierMove >= 16)
 		{
 			moulin = (tableau[*dernierMove - 8]) == turnJ[a] && (tableau[*dernierMove - 16] == turnJ[a]);
-		}//Entre les carrés(carré interne)
+		}//Entre les carrÃ©s(carrÃ© interne)
 		}
 	//Impairs
 	if (*dernierMove % 2 == 1) 
@@ -240,7 +240,7 @@ bool checkMoulin(int tableau[24], int turnJ[2], int* dernierMove, int a)//dernie
 			{
 				return moulin;
 			}
-		}//pour 1,9 et 17 (indices précédents), si vrai on retourne le résultat immédiatement
+		}//pour 1,9 et 17 (indices prÃ©cÃ©dents), si vrai on retourne le rÃ©sultat immÃ©diatement
 		else
 		{ 
 			moulin=(tableau[*dernierMove - 1]) == turnJ[a] && (tableau[*dernierMove - 2] == turnJ[a]); 
@@ -248,7 +248,7 @@ bool checkMoulin(int tableau[24], int turnJ[2], int* dernierMove, int a)//dernie
 			{
 				return moulin;
 			}
-		}//pour les autres valeurs (indices précédents), si vrai on retourne le résultat immédiatement
+		}//pour les autres valeurs (indices prÃ©cÃ©dents), si vrai on retourne le rÃ©sultat immÃ©diatement
 		if (*dernierMove % 8 == 7) 
 		{
 			moulin = (tableau[*dernierMove - 7]) == turnJ[a] && (tableau[*dernierMove - 6] == turnJ[a]);
@@ -284,8 +284,8 @@ bool moulinPartout(int tableau[24], int turnJ[2])
 
 
 
-bool checkMovePion(int tableau[24], int pionSelect)//pionSelect:pion qu'on veut déplacer, prochainMove:case ou l'on veut déplacer le pion
-{  // si libre vraie si bloqué false
+bool checkMovePion(int tableau[24], int pionSelect)//pionSelect:pion qu'on veut dÃ©placer, prochainMove:case ou l'on veut dÃ©placer le pion
+{  // si libre vraie si bloquÃ© false
 	bool move = false;
 	//Pairs
 	if (pionSelect % 2 == 0)
@@ -297,7 +297,7 @@ bool checkMovePion(int tableau[24], int pionSelect)//pionSelect:pion qu'on veut 
 			{
 				return move;
 			}
-		} //Sur les carrés(pour 0,8,16), si vrai on retourne le résultat immédiatement
+		} //Sur les carrÃ©s(pour 0,8,16), si vrai on retourne le rÃ©sultat immÃ©diatement
 		else
 		{
 			move = (tableau[pionSelect + 1] == 0) || (tableau[pionSelect - 1] == 0);
@@ -305,19 +305,19 @@ bool checkMovePion(int tableau[24], int pionSelect)//pionSelect:pion qu'on veut 
 			{
 				return move;
 			}
-		}//Sur les carrés(sauf 0,8,16 qui posent problème), si vrai on retourne le résultat immédiatement
+		}//Sur les carrÃ©s(sauf 0,8,16 qui posent problÃ¨me), si vrai on retourne le rÃ©sultat immÃ©diatement
 		if (pionSelect < 8)
 		{
 			move = (tableau[pionSelect + 8] == 0);
-		}//Entre les carrés(carré externe)
+		}//Entre les carrÃ©s(carrÃ© externe)
 		if (pionSelect >= 8 && pionSelect < 16)
 		{
 			move = (tableau[pionSelect - 8] == 0) || (tableau[pionSelect + 8] == 0);
-		}//Entre les carrés(carré milieu)	
+		}//Entre les carrÃ©s(carrÃ© milieu)	
 		if (pionSelect >= 16)
 		{
 			move = (tableau[pionSelect - 8] == 0);
-		}//Entre les carrés(carré interne)
+		}//Entre les carrÃ©s(carrÃ© interne)
 	}
 	//Impairs
 	if (pionSelect % 2 == 1)
@@ -325,11 +325,11 @@ bool checkMovePion(int tableau[24], int pionSelect)//pionSelect:pion qu'on veut 
 		if (pionSelect % 8 == 7)
 		{
 			move = (tableau[pionSelect - 7] == 0) || (tableau[pionSelect - 1] == 0);
-		}//pour 7,15 et 23 (indices suivants/précédents)
+		}//pour 7,15 et 23 (indices suivants/prÃ©cÃ©dents)
 		else
 		{
 			move = (tableau[pionSelect - 1] == 0) || (tableau[pionSelect + 1] == 0);
-		}//pour les autres valeurs (indices suivants/précédents)
+		}//pour les autres valeurs (indices suivants/prÃ©cÃ©dents)
 	}
 	return move;
 }
