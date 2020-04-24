@@ -1,2 +1,2 @@
 # Moulinmonpote
-Le jeu du moulin mon gars fdp
+Le jeu du moulin mon gars
