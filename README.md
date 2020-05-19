@@ -1,2 +1,2 @@
-# Moulinmonpote
-Le jeu du moulin mon gars
+# ProjetMoulin
+Le jeu du moulin par Jérémie Bentolila, Edis Metolli et Lucas Charasse
